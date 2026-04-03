@@ -1287,6 +1287,157 @@
         transform: translateY(-6px);
       }
     }
+
+    /* Dashboard */
+    .dash-stat-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 1rem;
+      padding: 1.25rem;
+      text-align: center;
+      transition: all 0.3s;
+    }
+
+    .dash-stat-card:hover {
+      border-color: rgba(139, 92, 246, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .dash-quick-card {
+      border-radius: 1rem;
+      padding: 1.25rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .dash-quick-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    }
+
+    .achievement-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1rem;
+      border-radius: 1rem;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      transition: all 0.3s;
+    }
+
+    .achievement-badge.unlocked {
+      border-color: rgba(139, 92, 246, 0.3);
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.08), rgba(236, 72, 153, 0.05));
+    }
+
+    .achievement-badge.locked {
+      opacity: 0.4;
+      filter: grayscale(0.8);
+    }
+
+    .confetti-piece {
+      position: fixed;
+      z-index: 999;
+      pointer-events: none;
+      animation: confettiFall linear forwards;
+    }
+
+    @keyframes confettiFall {
+      0% {
+        transform: translateY(-10vh) rotate(0deg);
+        opacity: 1;
+      }
+
+      100% {
+        transform: translateY(110vh) rotate(720deg);
+        opacity: 0;
+      }
+    }
+
+    .search-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      z-index: 500;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 12vh 1rem 2rem;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .search-global-input {
+      background: rgba(255, 255, 255, 0.08);
+      border: 2px solid rgba(139, 92, 246, 0.3);
+      border-radius: 1rem;
+      padding: 1rem 1.25rem 1rem 3rem;
+      color: white;
+      font-size: 1.1rem;
+      width: 100%;
+      max-width: 500px;
+      outline: none;
+      transition: all 0.3s;
+    }
+
+    .search-global-input:focus {
+      border-color: #8b5cf6;
+      box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15);
+    }
+
+    .search-results {
+      width: 100%;
+      max-width: 500px;
+      max-height: 60vh;
+      overflow-y: auto;
+      margin-top: 1rem;
+    }
+
+    .search-result-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      border-radius: 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: #e5e5e5;
+    }
+
+    .search-result-item:hover {
+      background: rgba(139, 92, 246, 0.15);
+    }
+
+    .match-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    .match-col {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .lesson-done-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      background: rgba(34, 197, 94, 0.15);
+      color: #22c55e;
+      padding: 0.15rem 0.5rem;
+      border-radius: 999px;
+      font-size: 0.6rem;
+      font-weight: 700;
+      margin-left: auto;
+    }
   </style>
 </head>
 
@@ -1303,6 +1454,11 @@
       </div>
 
       <nav class="space-y-1.5 px-2 md:px-3" id="mainNav">
+        <button data-section="dashboard"
+          class="nav-btn w-full flex items-center gap-3 md:gap-4 px-3 md:px-4 py-2.5 md:py-3 text-muted hover:text-white hover:bg-white/5 rounded-xl transition-all text-left">
+          <i class="fas fa-th-large w-5 text-center text-purple-400"></i>
+          <span class="hidden md:inline text-sm md:text-base font-medium">Dashboard</span>
+        </button>
         <button data-section="vocabulary"
           class="nav-btn w-full flex items-center gap-3 md:gap-4 px-3 md:px-4 py-2.5 md:py-3 text-muted hover:text-white hover:bg-white/5 rounded-xl transition-all text-left">
           <i class="fas fa-brain w-5 text-center text-accent"></i>
@@ -1344,6 +1500,10 @@
 
   <!-- MOBILE BOTTOM NAVIGATION -->
   <div class="bottom-nav" id="bottomNav">
+    <button data-section="dashboard" class="bottom-nav-item">
+      <i class="fas fa-th-large"></i>
+      <span>Home</span>
+    </button>
     <button data-section="vocabulary" class="bottom-nav-item">
       <i class="fas fa-brain"></i>
       <span>Words</span>
@@ -1371,6 +1531,36 @@
     <i class="fas fa-plus text-white text-lg"></i>
   </div>
 
+  <!-- LOGIN OVERLAY -->
+  <div id="loginOverlay"
+    class="fixed inset-0 bg-dark z-[1000] flex items-center justify-center p-4 transition-opacity duration-300">
+    <div class="absolute inset-0 bg-dark/95 backdrop-blur-3xl z-0"></div>
+    <div
+      class="relative z-10 w-full max-w-sm p-8 bg-card border border-white/10 rounded-[2rem] shadow-2xl text-center flex flex-col items-center">
+      <div
+        class="w-20 h-20 bg-gradient-to-br from-accent to-pink-500 rounded-3xl flex items-center justify-center mb-6 shadow-lg shadow-accent/20">
+        <i class="fas fa-user-astronaut text-4xl text-white"></i>
+      </div>
+      <h1 class="text-3xl font-extrabold text-white mb-2 tracking-tight">IELTS Pro</h1>
+      <p class="text-gray-400 text-sm mb-8 px-2 leading-relaxed">Введите имя, чтобы создать профиль и начать обучение с
+        чистого листа.</p>
+
+      <div class="w-full relative mb-5 group">
+        <i
+          class="fas fa-user absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-accent transition-colors"></i>
+        <input type="text" id="usernameInput" placeholder="Ваше логин..."
+          class="w-full bg-white/5 border-2 border-white/5 rounded-2xl py-4 pl-12 pr-4 text-white placeholder-gray-500 focus:outline-none focus:border-accent transition-all text-base font-medium shadow-inner"
+          autocomplete="off">
+      </div>
+
+      <button id="loginBtn"
+        class="w-full bg-white text-dark font-bold py-4 rounded-2xl hover:bg-gray-100 hover:scale-[1.02] active:scale-[0.98] transition-all text-base shadow-xl flex items-center justify-center gap-2">
+        <span>Продолжить</span>
+        <i class="fas fa-arrow-right text-sm"></i>
+      </button>
+    </div>
+  </div>
+
   <!-- Toast Notification -->
   <div id="toastMsg"
     class="fixed bottom-20 md:bottom-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-accent to-pink-500 text-white px-5 py-2.5 rounded-full text-xs md:text-sm font-mono z-50 hidden shadow-2xl whitespace-nowrap max-w-[90vw] text-center">
@@ -1390,7 +1580,7 @@
         gradient: 'linear-gradient(135deg, #0ea5e9, #0369a1)',
         lessons: [
           {
-            id: 1, title: 'Australian artist Margaret Preston',
+            id: 1, title: 'Australian artist Margaret Preston 🎨',
             text: `Margaret Preston's vibrant paintings and prints of Australian flowers, animals and landscapes have delighted the Australian public since the early 1920s.
 
 Margaret Preston was born Margaret Rose McPherson in Port Adelaide, South Australia in 1875, the daughter of David McPherson, a Scottish marine engineer and his wife Prudence Lyle. She and her sister were sent at first to a private school, but when family circumstances changed, her mother took the girls to Sydney where Margaret attended a public high school. She decided early in life to become an artist and took private art lessons. In 1888, she trained for several months with Sydney landscape painter William Lister, and in 1893 enrolled at the National Gallery of Victoria Art School, where she studied for just over four years.
@@ -1437,7 +1627,7 @@ However, in her prints of the 1950s, Preston combined Chinese ideas with her und
             }
           },
           {
-            id: 2, title: 'The importance of law',
+            id: 2, title: 'The importance of law ⚖️',
             text: `A The law influences all of us virtually all the time, it governs almost all aspects of our behavior, and even what happens to us when we are no longer alive. It affects us from the embryo onwards. It governs the air we breathe, the food and drink we consume, our travel, family relationships, and our property. It applies at the bottom of the ocean and in space. Each time we examine a label on a food product, engage in work as an employee or employer, travel on the roads, go to school to learn or to teach, stay in a hotel, borrow a library book, create or dissolve a commercial company, play sports, or engage the services of someone for anything from plumbing a sink to planning a city, we are in the world of law.
 
 B Law has also become much more widely recognised as the standard by which behavior needs to be judged. A very telling development in recent history is the way in which the idea of law has permeated all parts of social life. The universal standard of whether something is socially tolerated is progressively becoming whether it is legal, rather than something that has always been considered acceptable. In earlier times, most people were illiterate. Today, by contrast, a vast number of people can read, and it is becoming easier for people to take an interest in law, and for the general population to help actually shape the law in many countries. However, law is a versatile instrument that can be used equally well for the improvement or the degradation of humanity.
@@ -1481,7 +1671,7 @@ F People sometimes make comments that characterise lawyers as professionals whos
             }
           },
           {
-            id: 3, title: 'William Gilbert and Magnetism',
+            id: 3, title: 'William Gilbert and Magnetism 🧲',
             text: `A The 16th and 17th centuries saw two great pioneers of modern science: Galileo and Gilbert. The impact of their findings is eminent. Gilbert was the first modern scientist, also the accredited father of the science of electricity and magnetism, an Englishman of learning and a physician at the court of Elizabeth. Prior to him, all that was known of electricity and magnetism was what the ancients knew, nothing more than that the lodestone possessed magnetic properties and that amber and jet, when rubbed, would attract bits of paper or other substances of small specific gravity. However, he is less well known than he deserves.
 
 B Gilbert's birth pre-dated Galileo. Born in an eminent local family in Colchester County in the UK, on May 24, 1544, he went to grammar school, and then studied medicine at St John's College, Cambridge, graduating in 1573. Later he travelled in the continent and eventually settled down in London.
@@ -1526,9 +1716,35 @@ G His research method was revolutionary in that he used experiments rather than 
             }
           },
           // ДОБАВЬ БОЛЬШЕ УРОКОВ СЮДА ↓
+          {
+            id: 4, title: 'Pacific navigation and voyaging 🌊',
+            text: `How people migrated to the Pacific islands
 
+A The many tiny islands of the Pacific Ocean had no human population until ancestors of today’s islanders sailed from Southeast Asia in ocean-going canoes approximately 2,000 years ago. At the present time, the debate continues about exactly how they migrated such vast distances across the ocean, without any of the modern technologies we take for granted.
+
+B Although the romantic vision of some early twentieth-century writers of fleets of heroic navigators simultaneously setting sail had come to be considered by later investigators to be exaggerated, no considered assessment of Pacific voyaging was forthcoming until 1956 when the American historian Andrew Sharp published his research. Sharp challenged the ‘heroic vision’ by asserting that the expertise of the navigators was limited, and that the settlement of the islands was not systematic, being more dependent on good fortune by drifting canoes. Sharp’s theory was widely challenged, and deservedly so. If nothing else, however, it did spark renewed interest in the topic and precipitated valuable new research.
+
+C Since the 1960s a wealth of investigations has been conducted, and most of them, thankfully, have been of the ‘non-armchair’ variety. While it would be wrong to denigrate all ‘armchair’ research - that based on an examination of available published materials - it has turned out that so little progress had been made in the area of Pacific voyaging because most writers relied on the same old sources - travelers’ journals or missionary narratives compiled by unskilled observers. After Sharp, this began to change, and researchers conducted most of their investigations not in libraries, but in the field.
+
+D In 1965, David Lewis, a physician and experienced yachtsman, set to work using his own unique philosophy: he took the yacht he had owned for many years and navigated through the islands in order to contact those men who still find their way at sea using traditional methods. He then accompanied these men, in their traditional canoes, on test voyages from which all modern instruments were banished from sight, though Lewis secretly used them to confirm the navigator’s calculations. His most famous such voyage was a return trip of around 1,000 nautical miles between two islands in mid­ocean. Far from drifting, as proposed by Sharp, Lewis found that ancient navigators would have known which course to steer by memorizing which stars rose and set in certain positions along the horizon and this gave them fixed directions by which to steer their boats.
+
+E The geographer Edwin Doran followed a quite different approach. He was interested in obtaining exact data on canoe sailing performance, and to that end employed the latest electronic instrumentation. Doran traveled on board traditional sailing canoes in some of the most remote parts of the Pacific, all the while using his instruments to record canoe speeds in different wind strengths - from gales to calms - the angle canoes could sail relative to the wind. In the process, he provided the first really precise attributes of traditional sailing canoes.
+
+F A further contribution was made by Steven Horvath. As a physiologist, Horvath’s interest was not in navigation techniques or in canoes, but in the physical capabilities of the men themselves. By adapting standard physiological techniques, Horvath was able to calculate the energy expenditure required to paddle canoes of this sort at times when there was no wind to fill the sails, or when the wind was contrary. He concluded that paddles, or perhaps long oars, could indeed have propelled for long distances what were primarily sailing vessels.
+
+G Finally, a team led by p Wall Garrard conducted important research, in this case by making investigations while remaining safely in the laboratory. Wall Garrard’s unusual method was to use the findings of linguists who had studied the languages of the Pacific islands, many of which are remarkably similar although the islands where they are spoken are sometimes thousands of kilometres apart. Clever adaptation of computer simulation techniques pioneered in other disciplines allowed him to produce convincing models suggesting the migrations were indeed systematic, but not simultaneous. Wall Garrard proposed the migrations should be seen not as a single journey made by a massed fleet of canoes, but as a series of ever more ambitious voyages, each pushing further into the unknown ocean.
+
+H What do we learn about Pacific navigation and voyaging from this research? Quite correctly, none of the researchers tried to use their findings to prove one theory or another; experiments such as these cannot categorically confirm or negate a hypothesis. The strength of this research lay in the range of methodologies employed. When we splice together these findings we can propose that traditional navigators used a variety of canoe types, sources of water and navigation techniques, and it was this adaptability which was their greatest accomplishment. These navigators observed the conditions prevailing at sea at the time a voyage was made and altered their techniques accordingly. Furthermore, the canoes of the navigators were not drifting helplessly at sea but were most likely part of a systematic migration; as such, the Pacific peoples were able to view the ocean as an avenue, not a barrier, to communication before any other race on Earth. Finally, one unexpected but most welcome consequence of this research has been a renaissance in the practice of traditional voyaging. In some groups of islands in the Pacific today young people are resurrecting the skills of their ancestors, when a few decades ago it seemed they would be lost forever.
+
+`,
+            questions: [
+
+            ]
+          }
         ]
+
       },
+
       {
         id: 'r2', title: 'Technology', emoji: '💻',
         gradient: 'linear-gradient(135deg, #8b5cf6, #6d28d9)',
@@ -1733,13 +1949,14 @@ G His research method was revolutionary in that he used experiments rather than 
       { id: 32, category: 'house', word: 'Ceiling', translation: 'Потолок', pos: 'Noun', definition: 'The upper surface of a room.', example: 'The ceiling is very high.' },
       { id: 33, category: 'house', word: 'Furniture', translation: 'Мебель', pos: 'Noun', definition: 'Movable objects in a room.', example: 'We need new furniture for the living room.' },
       // Словар
-      { id: 34, category: 'Essential', word: 'Afraid', translation: 'испуганный', pos: 'Noun', definition: 'A round fruit with red or green skin.', example: 'I eat an apple every day.' },
-      { id: 35, category: 'Essential', word: 'Agree', translation: 'соглашаться', pos: 'Noun', definition: 'A long curved fruit with yellow skin.', example: 'Bananas are rich in potassium.' },
-      { id: 36, category: 'Essential', word: 'Angry', translation: 'злой', pos: 'Noun', definition: 'A small red fruit with seeds on the surface.', example: 'Strawberry ice cream is delicious.' },
-      { id: 37, category: 'Essential', word: 'Arrive', translation: 'прибывать', pos: 'Noun', definition: 'A large green fruit with red flesh.', example: 'We ate watermelon at the picnic.' },
+      { id: 34, category: 'Essential', word: 'Afraid', translation: 'испуганный', pos: 'Adjective', definition: 'Feeling fear or anxiety.', example: 'She was afraid of the dark.' },
+      { id: 35, category: 'Essential', word: 'Agree', translation: 'соглашаться', pos: 'Verb', definition: 'To have the same opinion or accept something.', example: 'I agree with your suggestion.' },
+      { id: 36, category: 'Essential', word: 'Angry', translation: 'злой', pos: 'Adjective', definition: 'Feeling strong displeasure or hostility.', example: 'He was angry about the delay.' },
+      { id: 37, category: 'Essential', word: 'Arrive', translation: 'прибывать', pos: 'Verb', definition: 'To reach a destination.', example: 'We will arrive at the airport by noon.' },
     ];
 
-    let nextVocabId = 34;
+    let nextVocabId = 38;
+    const INITIAL_VOCABULARY = JSON.parse(JSON.stringify(vocabulary));
     let activeCategory = null; // null = show categories, string = show cards in category
 
     let currentMinutes = 0;
@@ -1854,6 +2071,7 @@ G His research method was revolutionary in that he used experiments rather than 
             </div>
             <div class="flex gap-2 items-center">
               <button id="quizCatBtn" class="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-full font-medium text-sm transition-all flex items-center gap-1.5"><i class="fas fa-bolt text-yellow-400"></i> Quiz</button>
+              <button id="matchGameBtn" class="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-full font-medium text-sm transition-all flex items-center gap-1.5"><i class="fas fa-puzzle-piece text-green-400"></i> Match</button>
               <button id="openAddWordBtn" class="bg-gradient-to-r from-accent to-pink-500 text-white px-5 py-2.5 rounded-full font-bold hover:shadow-lg transition-all text-sm">+ New</button>
             </div>
           </div>
@@ -1874,6 +2092,7 @@ G His research method was revolutionary in that he used experiments rather than 
       });
       document.getElementById('openAddWordBtn')?.addEventListener('click', () => openAddModal(catId));
       document.getElementById('quizCatBtn')?.addEventListener('click', () => startQuiz(catId));
+      document.getElementById('matchGameBtn')?.addEventListener('click', () => startMatchingGame(catId));
       document.getElementById('vocabSearch')?.addEventListener('input', (e) => {
         vocabSearchQuery = e.target.value;
         renderVocabCards(catId);
@@ -1952,7 +2171,8 @@ G His research method was revolutionary in that he used experiments rather than 
             container.style.transition = 'all 0.3s ease';
             setTimeout(() => {
               vocabulary = vocabulary.filter(v => v.id !== id);
-              renderVocabCards();
+              saveVocabulary();
+              renderVocabCards(activeCategory);
               showToast("🗑️ Card removed", "from-red-500 to-orange-500");
             }, 300);
           }
@@ -2101,6 +2321,7 @@ G His research method was revolutionary in that he used experiments rather than 
         const ex = document.getElementById('newEx').value.trim();
         if (word && translation) {
           vocabulary.push({ id: nextVocabId++, category, word, translation, pos, definition: '', example: ex || '' });
+          saveVocabulary();
           if (activeCategory === category) {
             renderVocabCards(category);
           }
@@ -2179,9 +2400,13 @@ G His research method was revolutionary in that he used experiments rather than 
         const accentColor = cat.gradient.match(/#[a-f0-9]+/i)?.[0] || '#8b5cf6';
         return `
           <div class="task-item card-animate rounded-xl p-4 border border-white/5 cursor-pointer" style="animation-delay:${delay}ms;border-left:3px solid ${accentColor}" data-lesson-id="${lesson.id}">
-            <h3 class="font-bold ${iconColor} text-sm md:text-base">${cat.emoji} ${escapeHtml(lesson.title)}</h3>
+            <div class="flex items-center gap-2">
+              <h3 class="font-bold ${iconColor} text-sm md:text-base flex-1">${cat.emoji} ${escapeHtml(lesson.title)}</h3>
+              ${isLessonDone(sectionType, cat.id, lesson.id) ? '<span class="lesson-done-badge"><i class="fas fa-check"></i> Done</span>' : ''}
+            </div>
             <p class="text-xs text-muted mt-1">${sectionType === 'writing' ? (lesson.type || '') : sectionType === 'listening' ? (lesson.scenario?.substring(0, 60) + '...') : sectionType === 'speaking' ? (lesson.cueCard?.substring(0, 60) + '...') : ('Текст + вопросы')}</p>
           </div>`;
+
       }).join('');
 
       document.getElementById('backToSkillPacks')?.addEventListener('click', () => {
@@ -2201,6 +2426,7 @@ G His research method was revolutionary in that he used experiments rather than 
     // Lesson Detail — Full View with content
     function openLessonDetail(lesson, type, cat, icon, iconColor) {
       let contentHtml = '';
+      let readingScore = { correct: 0, total: 0 };
 
       if (type === 'reading') {
         // Fill-in questions section
@@ -2436,10 +2662,9 @@ G His research method was revolutionary in that he used experiments rather than 
           </div>`;
       }
 
-      // Timer for reading
+      // Timer for reading (declared early so template can reference readingScore)
       let readingTimerInterval = null;
       let readingStartTime = null;
-      let readingScore = { correct: 0, total: 0 };
 
       const fullHtml = `
         <div class="sticky top-0 bg-dark/80 backdrop-blur-md z-10 py-3 mb-4">
@@ -2545,6 +2770,9 @@ G His research method was revolutionary in that he used experiments rather than 
           </div>
         `;
         recordTest('reading', readingScore.correct, readingScore.total);
+        markLessonComplete('reading', activeSkillCategory, lesson.id);
+        if (pct >= 75) launchConfetti();
+        checkAndNotifyAchievements();
       });
 
       // Answer checking for reading/listening questions
@@ -2819,7 +3047,19 @@ G His research method was revolutionary in that he used experiments rather than 
             else { pill.className = 'wc-pill bg-white/10 text-gray-400'; }
           }
           if (hint) hint.textContent = count >= minWords ? '✅ Минимум достигнут!' : `Ещё ${minWords - count} слов до минимума`;
+          // Auto-save essay
+          saveEssay(`${type}_${lesson.id}`, e.target.value);
+          if (count >= minWords) {
+            markLessonComplete('writing', activeSkillCategory, lesson.id);
+            checkAndNotifyAchievements();
+          }
         });
+        // Load saved essay
+        const savedEssay = loadEssays()[`${type}_${lesson.id}`];
+        if (savedEssay?.text) {
+          const ta = document.getElementById('writingArea');
+          if (ta) { ta.value = savedEssay.text; ta.dispatchEvent(new Event('input')); }
+        }
 
         // Writing timer
         function updateWTimer() {
@@ -2982,13 +3222,20 @@ G His research method was revolutionary in that he used experiments rather than 
       }
     }
 
+    // === MULTI-USER SYSTEM ===
+    let currentUser = localStorage.getItem('ielts_current_user') || '';
+
+    function getStorageKey(baseKey) {
+      return currentUser ? `${baseKey}_${currentUser}` : baseKey;
+    }
+
     // === PROFILE / localStorage ===
-    const PROFILE_KEY = 'ielts_profile';
+    const PROFILE_KEY_BASE = 'ielts_profile';
     function loadProfile() {
-      try { return JSON.parse(localStorage.getItem(PROFILE_KEY)) || {}; } catch { return {}; }
+      try { return JSON.parse(localStorage.getItem(getStorageKey(PROFILE_KEY_BASE))) || {}; } catch { return {}; }
     }
     function saveProfile(data) {
-      localStorage.setItem(PROFILE_KEY, JSON.stringify(data));
+      localStorage.setItem(getStorageKey(PROFILE_KEY_BASE), JSON.stringify(data));
     }
     function updateStreak() {
       const p = loadProfile();
@@ -3009,6 +3256,198 @@ G His research method was revolutionary in that he used experiments rather than 
       saveProfile(p);
     }
 
+    // === localStorage Persistence ===
+    const VOCAB_KEY_BASE = 'ielts_vocab';
+    const COMPLETED_KEY_BASE = 'ielts_completed';
+    const ESSAYS_KEY_BASE = 'ielts_essays';
+    const ACH_SEEN_KEY_BASE = 'ielts_ach_seen';
+
+    function saveVocabulary() { localStorage.setItem(getStorageKey(VOCAB_KEY_BASE), JSON.stringify(vocabulary)); }
+    function loadSavedVocabulary() {
+      try {
+        const s = JSON.parse(localStorage.getItem(getStorageKey(VOCAB_KEY_BASE)));
+        if (s && s.length > 0) {
+          vocabulary = s;
+          nextVocabId = Math.max(...vocabulary.map(v => v.id)) + 1;
+        } else {
+          vocabulary = JSON.parse(JSON.stringify(INITIAL_VOCABULARY));
+          nextVocabId = 38;
+        }
+      } catch {
+        vocabulary = JSON.parse(JSON.stringify(INITIAL_VOCABULARY));
+        nextVocabId = 38;
+      }
+    }
+    function markLessonComplete(type, catId, lessonId) {
+      const c = loadCompleted();
+      const k = `${type}_${catId}_${lessonId}`;
+      if (!c.includes(k)) { c.push(k); localStorage.setItem(getStorageKey(COMPLETED_KEY_BASE), JSON.stringify(c)); }
+    }
+    function loadCompleted() { try { return JSON.parse(localStorage.getItem(getStorageKey(COMPLETED_KEY_BASE))) || []; } catch { return []; } }
+    function isLessonDone(type, catId, lessonId) { return loadCompleted().includes(`${type}_${catId}_${lessonId}`); }
+    function saveEssay(id, text) { const e = loadEssays(); e[id] = { text, date: new Date().toISOString() }; localStorage.setItem(getStorageKey(ESSAYS_KEY_BASE), JSON.stringify(e)); }
+    function loadEssays() { try { return JSON.parse(localStorage.getItem(getStorageKey(ESSAYS_KEY_BASE))) || {}; } catch { return {}; } }
+
+    // === Achievements ===
+    const achievementsDefs = [
+      { id: 'first_flame', emoji: '🔥', title: 'First Flame', desc: 'Первый день в приложении', check: p => (p.totalDays || 0) >= 1 },
+      { id: 'bookworm', emoji: '📚', title: 'Bookworm', desc: 'Пройти 5 тестов', check: p => (p.testsCompleted || 0) >= 5 },
+      { id: 'sharpshooter', emoji: '🎯', title: 'Sharpshooter', desc: '100% на тесте', check: p => (p.tests || []).some(t => t.score === t.total && t.total > 0) },
+      { id: 'week_warrior', emoji: '🗓', title: 'Week Warrior', desc: '7 дней подряд', check: p => (p.streak || 0) >= 7 },
+      { id: 'vocab_master', emoji: '💎', title: 'Vocab Master', desc: '50+ слов', check: () => vocabulary.length >= 50 },
+      { id: 'quiz_lover', emoji: '⚡', title: 'Quiz Lover', desc: 'Пройти 10 квизов', check: p => (p.testsCompleted || 0) >= 10 },
+      { id: 'polyglot', emoji: '🌍', title: 'Polyglot', desc: 'Слова в 5+ категориях', check: () => new Set(vocabulary.map(v => v.category)).size >= 5 },
+      { id: 'writer', emoji: '✍️', title: 'Writer', desc: 'Написать 3 эссе', check: () => Object.keys(loadEssays()).length >= 3 },
+    ];
+    function getUnlockedAch() { const p = loadProfile(); return achievementsDefs.filter(a => a.check(p)); }
+    function checkAndNotifyAchievements() {
+      const unlocked = getUnlockedAch();
+      const seen = JSON.parse(localStorage.getItem(getStorageKey(ACH_SEEN_KEY_BASE)) || '[]');
+      const fresh = unlocked.filter(a => !seen.includes(a.id));
+      if (fresh.length > 0) {
+        fresh.forEach(a => showToast(`${a.emoji} ${a.title}!`, 'from-yellow-400 to-orange-500'));
+        localStorage.setItem(getStorageKey(ACH_SEEN_KEY_BASE), JSON.stringify(unlocked.map(a => a.id)));
+      }
+    }
+
+    // === Confetti ===
+    function launchConfetti() {
+      const cols = ['#8b5cf6', '#ec4899', '#22c55e', '#3b82f6', '#eab308', '#ef4444'];
+      for (let i = 0; i < 50; i++) {
+        const el = document.createElement('div');
+        el.className = 'confetti-piece';
+        el.style.left = Math.random() * 100 + 'vw';
+        el.style.width = (Math.random() * 8 + 4) + 'px';
+        el.style.height = (Math.random() * 8 + 4) + 'px';
+        el.style.background = cols[Math.floor(Math.random() * cols.length)];
+        el.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+        el.style.animationDuration = (Math.random() * 2 + 1.5) + 's';
+        el.style.animationDelay = (Math.random() * 0.8) + 's';
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 4000);
+      }
+    }
+
+    // === Dashboard ===
+    function renderDashboard() {
+      const p = loadProfile();
+      const streak = p.streak || 0, totalDays = p.totalDays || 0, tc = p.testsCompleted || 0;
+      const tests = p.tests || [];
+      const recent = tests.slice(-5).reverse();
+      const avg = tests.length > 0 ? Math.round(tests.reduce((s, t) => s + (t.total > 0 ? t.score / t.total * 100 : 0), 0) / tests.length) : 0;
+      const unlocked = getUnlockedAch();
+      const completed = loadCompleted();
+      const html = `
+      <div class="page-transition">
+        <div class="sticky top-0 bg-dark/80 backdrop-blur-md z-10 py-3 mb-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 id="dashGreeting" class="text-2xl md:text-4xl font-bold bg-gradient-to-r from-white via-purple-200 to-accent bg-clip-text text-transparent">Dashboard</h2>
+              <p id="dashLiveTime" class="text-xs text-muted mt-1 capitalize font-mono">Ваш прогресс IELTS</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button id="globalSearchBtn" class="bg-white/5 hover:bg-white/10 border border-white/10 text-muted hover:text-white px-3 md:px-4 py-2 md:py-2.5 rounded-xl transition-all flex items-center gap-2 text-xs md:text-sm"><i class="fas fa-search"></i><span class="hidden md:inline"> Поиск</span></button>
+              <button id="logoutBtn" class="bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 text-red-400 px-3 md:px-4 py-2 md:py-2.5 rounded-xl transition-all flex items-center gap-2 text-xs md:text-sm"><i class="fas fa-sign-out-alt"></i><span class="hidden md:inline"> Сменить</span></button>
+            </div>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+          <div class="dash-stat-card card-animate" style="animation-delay:0ms"><div class="streak-fire">${streak > 0 ? '🔥' : '❄️'}</div><p class="text-2xl font-extrabold text-white mt-1">${streak}</p><p class="text-xs text-muted">Дней подряд</p></div>
+          <div class="dash-stat-card card-animate" style="animation-delay:80ms"><div style="font-size:2rem">📚</div><p class="text-2xl font-extrabold text-white mt-1">${vocabulary.length}</p><p class="text-xs text-muted">Слов</p></div>
+          <div class="dash-stat-card card-animate" style="animation-delay:160ms"><div style="font-size:2rem">✅</div><p class="text-2xl font-extrabold text-white mt-1">${tc}</p><p class="text-xs text-muted">Тестов</p></div>
+          <div class="dash-stat-card card-animate" style="animation-delay:240ms"><div style="font-size:2rem">📊</div><p class="text-2xl font-extrabold text-white mt-1">${avg}%</p><p class="text-xs text-muted">Средний балл</p></div>
+        </div>
+        <h3 class="text-lg font-bold text-white mb-3"><i class="fas fa-bolt text-yellow-400"></i> Быстрый доступ</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+          <div class="dash-quick-card card-animate" style="animation-delay:100ms;background:linear-gradient(135deg,rgba(139,92,246,0.15),rgba(139,92,246,0.05))" data-goto="vocabulary"><i class="fas fa-brain text-2xl text-accent"></i><div><p class="font-bold text-white text-sm">Vocabulary</p><p class="text-xs text-muted">${vocabulary.length} слов</p></div></div>
+          <div class="dash-quick-card card-animate" style="animation-delay:180ms;background:linear-gradient(135deg,rgba(96,165,250,0.15),rgba(96,165,250,0.05))" data-goto="reading"><i class="fas fa-book-open text-2xl text-blue-400"></i><div><p class="font-bold text-white text-sm">Reading</p><p class="text-xs text-muted">${readingLessons.reduce((s, c) => s + c.lessons.length, 0)} уроков</p></div></div>
+          <div class="dash-quick-card card-animate" style="animation-delay:260ms;background:linear-gradient(135deg,rgba(244,114,182,0.15),rgba(244,114,182,0.05))" data-goto="writing"><i class="fas fa-pen-fancy text-2xl text-pink-400"></i><div><p class="font-bold text-white text-sm">Writing</p><p class="text-xs text-muted">${writingLessons.reduce((s, c) => s + c.lessons.length, 0)} уроков</p></div></div>
+          <div class="dash-quick-card card-animate" style="animation-delay:340ms;background:linear-gradient(135deg,rgba(34,197,94,0.15),rgba(34,197,94,0.05))" data-goto="speaking"><i class="fas fa-microphone-alt text-2xl text-green-400"></i><div><p class="font-bold text-white text-sm">Speaking</p><p class="text-xs text-muted">${speakingLessons.reduce((s, c) => s + c.lessons.length, 0)} уроков</p></div></div>
+        </div>
+        <h3 class="text-lg font-bold text-white mb-3"><i class="fas fa-trophy text-yellow-400"></i> Достижения <span class="text-xs text-muted font-mono font-normal ml-1">${unlocked.length}/${achievementsDefs.length}</span></h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+          ${achievementsDefs.map((a, i) => { const u = unlocked.some(x => x.id === a.id); return `<div class="achievement-badge ${u ? 'unlocked' : 'locked'} card-animate" style="animation-delay:${i * 60}ms"><span style="font-size:1.75rem">${a.emoji}</span><div><p class="font-bold text-sm ${u ? 'text-white' : 'text-gray-500'}">${a.title}</p><p class="text-xs ${u ? 'text-gray-400' : 'text-gray-600'}">${a.desc}</p></div>${u ? '<i class="fas fa-check-circle text-green-400 ml-auto"></i>' : '<i class="fas fa-lock text-gray-600 ml-auto"></i>'}</div>`; }).join('')}
+        </div>
+        ${recent.length > 0 ? `<h3 class="text-lg font-bold text-white mb-3"><i class="fas fa-history text-accent"></i> Недавние тесты</h3><div class="space-y-2 mb-6 pb-20">${recent.map(t => { const pct = t.total > 0 ? Math.round(t.score / t.total * 100) : 0; const c = pct >= 80 ? '#22c55e' : pct >= 60 ? '#eab308' : '#ef4444'; const em = t.section === 'reading' ? '📖' : t.section === 'writing' ? '✍️' : t.section === 'speaking' ? '🎤' : '🎧'; const d = new Date(t.date).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' }); return `<div class="flex items-center gap-3 p-3 rounded-xl bg-white/3 border border-white/5"><span style="font-size:1.25rem">${em}</span><div class="flex-1"><p class="text-sm font-medium text-white capitalize">${t.section}</p><p class="text-xs text-muted">${d}</p></div><div class="text-right"><p class="font-bold font-mono" style="color:${c}">${t.score}/${t.total}</p><p class="text-xs text-muted">${pct}%</p></div></div>`; }).join('')}</div>` : '<div class="text-center py-8 text-muted pb-20"><i class="fas fa-chart-line text-3xl mb-2 block"></i><p>Пройдите первый тест!</p></div>'}
+      </div>`;
+      document.getElementById('mainContent').innerHTML = html;
+      document.querySelectorAll('[data-goto]').forEach(el => el.addEventListener('click', () => { activeSkillCategory = null; loadSection(el.dataset.goto); }));
+      document.getElementById('globalSearchBtn')?.addEventListener('click', openGlobalSearch);
+      document.getElementById('logoutBtn')?.addEventListener('click', logoutUser);
+      updateRealTimeClock();
+    }
+
+    // === Global Search ===
+    function openGlobalSearch() {
+      const h = `<div class="search-overlay" id="searchOverlay"><div style="position:relative;width:100%;max-width:500px"><i class="fas fa-search" style="position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:#737373"></i><input type="text" id="gsInput" class="search-global-input" placeholder="Искать слова, уроки..." autofocus></div><div class="search-results" id="gsResults"></div><button id="gsClose" style="position:fixed;top:1rem;right:1rem;background:rgba(255,255,255,0.08);border:none;color:#999;width:40px;height:40px;border-radius:50%;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center"><i class="fas fa-times"></i></button></div>`;
+      document.body.insertAdjacentHTML('beforeend', h);
+      document.getElementById('gsClose')?.addEventListener('click', () => document.getElementById('searchOverlay')?.remove());
+      document.getElementById('searchOverlay')?.addEventListener('click', e => { if (e.target.id === 'searchOverlay') document.getElementById('searchOverlay')?.remove(); });
+      const esc = e => { if (e.key === 'Escape') { document.getElementById('searchOverlay')?.remove(); document.removeEventListener('keydown', esc); } };
+      document.addEventListener('keydown', esc);
+      document.getElementById('gsInput')?.addEventListener('input', e => {
+        const q = e.target.value.toLowerCase().trim();
+        const r = document.getElementById('gsResults');
+        if (!q || q.length < 2) { r.innerHTML = '<p class="text-center text-muted text-sm py-8">Введите минимум 2 символа</p>'; return; }
+        let items = [];
+        vocabulary.filter(v => v.word.toLowerCase().includes(q) || v.translation.toLowerCase().includes(q)).slice(0, 6).forEach(v => items.push({ icon: 'fa-brain', color: 'text-accent', t: v.word, s: v.translation, fn: () => { document.getElementById('searchOverlay')?.remove(); activeCategory = v.category; loadSection('vocabulary'); } }));
+        readingLessons.forEach(c => c.lessons.filter(l => l.title.toLowerCase().includes(q)).forEach(l => items.push({ icon: 'fa-book-open', color: 'text-blue-400', t: l.title, s: 'Reading • ' + c.title, fn: () => { document.getElementById('searchOverlay')?.remove(); activeSkillCategory = c.id; loadSection('reading'); } })));
+        writingLessons.forEach(c => c.lessons.filter(l => l.title.toLowerCase().includes(q)).forEach(l => items.push({ icon: 'fa-pen-fancy', color: 'text-pink-400', t: l.title, s: 'Writing • ' + c.title, fn: () => { document.getElementById('searchOverlay')?.remove(); activeSkillCategory = c.id; loadSection('writing'); } })));
+        speakingLessons.forEach(c => c.lessons.filter(l => l.title.toLowerCase().includes(q)).forEach(l => items.push({ icon: 'fa-microphone-alt', color: 'text-green-400', t: l.title, s: 'Speaking • ' + c.title, fn: () => { document.getElementById('searchOverlay')?.remove(); activeSkillCategory = c.id; loadSection('speaking'); } })));
+        listeningLessons.forEach(c => c.lessons.filter(l => l.title.toLowerCase().includes(q)).forEach(l => items.push({ icon: 'fa-headphones', color: 'text-yellow-400', t: l.title, s: 'Listening • ' + c.title, fn: () => { document.getElementById('searchOverlay')?.remove(); activeSkillCategory = c.id; loadSection('listening'); } })));
+        if (!items.length) { r.innerHTML = '<p class="text-center text-muted text-sm py-8"><i class="fas fa-search mb-2 text-2xl block"></i>Ничего не найдено</p>'; return; }
+        r.innerHTML = items.map((it, i) => `<div class="search-result-item" data-si="${i}"><i class="fas ${it.icon} ${it.color}"></i><div><p class="text-sm font-medium">${escapeHtml(it.t)}</p><p class="text-xs text-muted">${escapeHtml(it.s)}</p></div></div>`).join('');
+        document.querySelectorAll('.search-result-item').forEach(el => el.addEventListener('click', () => items[parseInt(el.dataset.si)]?.fn()));
+      });
+    }
+
+    // === Matching Game ===
+    function startMatchingGame(catId) {
+      const cw = vocabulary.filter(v => v.category === (catId || activeCategory));
+      if (cw.length < 4) { showToast('Нужно минимум 4 слова!', 'from-red-500 to-orange-500'); return; }
+      const gw = [...cw].sort(() => Math.random() - 0.5).slice(0, Math.min(6, cw.length));
+      const L = [...gw].sort(() => Math.random() - 0.5), R = [...gw].sort(() => Math.random() - 0.5);
+      let sel = null, score = 0; const st = Date.now();
+      const h = `<div class="word-detail-overlay" id="matchOverlay"><div class="word-detail-card" style="max-width:520px;padding:1.5rem"><button class="word-detail-close" id="closeMatch"><i class="fas fa-times"></i></button><h3 class="text-xl font-bold text-white mb-1"><i class="fas fa-puzzle-piece text-accent"></i> Matching Game</h3><p class="text-xs text-muted mb-4">Соедини слово с переводом</p><div class="flex items-center justify-between mb-4"><span class="wc-pill bg-accent/20 text-accent" id="mScore">0/${gw.length}</span><span class="wc-pill bg-white/10 text-gray-400" id="mTimer">0:00</span></div><div class="match-columns" id="mGrid"><div class="match-col">${L.map((w, i) => `<div class="match-card" data-s="l" data-i="${i}" data-wid="${w.id}">${escapeHtml(w.word)}</div>`).join('')}</div><div class="match-col">${R.map((w, i) => `<div class="match-card" data-s="r" data-i="${i}" data-wid="${w.id}">${escapeHtml(w.translation)}</div>`).join('')}</div></div></div></div>`;
+      document.body.insertAdjacentHTML('beforeend', h);
+      const ti = setInterval(() => { const e = Math.floor((Date.now() - st) / 1000); const el = document.getElementById('mTimer'); if (el) el.textContent = `${Math.floor(e / 60)}:${String(e % 60).padStart(2, '0')}`; }, 1000);
+      document.getElementById('closeMatch')?.addEventListener('click', () => { clearInterval(ti); document.getElementById('matchOverlay')?.remove(); });
+      document.querySelectorAll('#mGrid .match-card').forEach(card => {
+        card.addEventListener('click', () => {
+          if (card.classList.contains('correct')) return;
+          const side = card.dataset.s, wid = parseInt(card.dataset.wid);
+          if (!sel) { sel = { side, wid, el: card }; card.classList.add('selected'); }
+          else if (sel.side === side) { sel.el.classList.remove('selected'); sel = { side, wid, el: card }; card.classList.add('selected'); }
+          else {
+            if (sel.wid === wid) { card.classList.remove('selected'); card.classList.add('correct'); sel.el.classList.remove('selected'); sel.el.classList.add('correct'); score++; document.getElementById('mScore').textContent = `${score}/${gw.length}`; if (score === gw.length) { clearInterval(ti); const el = Math.floor((Date.now() - st) / 1000); setTimeout(() => { launchConfetti(); showToast(`🎉 Все пары за ${el} сек!`, 'from-green-500 to-emerald-500'); setTimeout(() => document.getElementById('matchOverlay')?.remove(), 1500); }, 400); } sel = null; }
+            else { card.classList.add('wrong'); sel.el.classList.add('wrong'); const pr = sel.el; setTimeout(() => { card.classList.remove('wrong', 'selected'); pr.classList.remove('wrong', 'selected'); }, 500); sel = null; }
+          }
+        });
+      });
+    }
+
+    // Real time clock
+    function updateRealTimeClock() {
+      const p = document.getElementById('dashLiveTime');
+      const h2 = document.getElementById('dashGreeting');
+      if (!p || !h2) return;
+      const now = new Date();
+      const h = now.getHours();
+      let greeting = 'Добрый вечер';
+      let emoji = '🌆';
+      if (h < 6) { greeting = 'Доброй ночи'; emoji = '🌙'; }
+      else if (h < 12) { greeting = 'Доброе утро'; emoji = '☀️'; }
+      else if (h < 18) { greeting = 'Добрый день'; emoji = '👋'; }
+
+      const timeStr = now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      const dateStr = now.toLocaleDateString('ru-RU', { weekday: 'short', day: 'numeric', month: 'long' });
+      p.innerHTML = `<i class="far fa-clock text-accent/80"></i> <strong class="text-gray-200">${timeStr}</strong> <span class="text-gray-500 mx-1">•</span> <span class="capitalize text-gray-400">${dateStr}</span>`;
+      if (!h2.dataset.greeted || h2.dataset.greeted !== greeting) {
+        h2.innerHTML = `${greeting} <span class="text-accent">${emoji}</span>`;
+        h2.dataset.greeted = greeting;
+      }
+    }
+
     // Navigation
     function setActiveNav(section) {
       document.querySelectorAll('.nav-btn, .bottom-nav-item').forEach(btn => {
@@ -3024,7 +3463,8 @@ G His research method was revolutionary in that he used experiments rather than 
       activeSection = section;
       setActiveNav(section);
       window.speechSynthesis?.cancel();
-      if (section === 'vocabulary') { activeSkillCategory = null; renderVocabularySection(); }
+      if (section === 'dashboard') renderDashboard();
+      else if (section === 'vocabulary') { activeSkillCategory = null; renderVocabularySection(); }
       else if (section === 'reading') renderSkillPacks('Reading Lab', 'fa-book-open', readingLessons, 'reading', 'text-blue-400');
       else if (section === 'writing') renderSkillPacks('Writing Flow', 'fa-pen-fancy', writingLessons, 'writing', 'text-pink-400');
       else if (section === 'speaking') renderSkillPacks('Speaking Studio', 'fa-microphone-alt', speakingLessons, 'speaking', 'text-green-400');
@@ -3032,14 +3472,57 @@ G His research method was revolutionary in that he used experiments rather than 
       document.getElementById('mainContent')?.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // Initialize
-    function init() {
+    // Logic for Login
+    function initLogin() {
+      const overlay = document.getElementById('loginOverlay');
+      const input = document.getElementById('usernameInput');
+      const btn = document.getElementById('loginBtn');
+
+      if (currentUser) {
+        overlay.style.display = 'none';
+        postLoginInit();
+      } else {
+        overlay.style.display = 'flex';
+        setTimeout(() => input.focus(), 100);
+      }
+
+      const doLogin = () => {
+        const val = input.value.trim();
+        if (val) {
+          currentUser = val;
+          localStorage.setItem('ielts_current_user', currentUser);
+          overlay.style.opacity = '0';
+          setTimeout(() => {
+            overlay.style.display = 'none';
+            postLoginInit();
+            showToast(`👋 Добро пожаловать, ${currentUser}!`, 'from-accent to-pink-500');
+          }, 300);
+        } else {
+          showToast('Пожалуйста, введите имя', 'from-red-500 to-orange-500');
+        }
+      };
+
+      btn.addEventListener('click', doLogin);
+      input.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+    }
+
+    function logoutUser() {
+      localStorage.removeItem('ielts_current_user');
+      location.reload();
+    }
+
+    // Post Login Initialize
+    function postLoginInit() {
+      loadSavedVocabulary();
       updateStreak();
-      // Register PWA service worker
+      updateRealTimeClock();
+      setInterval(updateRealTimeClock, 1000);
+
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('sw.js').catch(() => { });
       }
-      loadSection('vocabulary');
+      loadSection('dashboard');
+      setTimeout(checkAndNotifyAchievements, 1500);
 
       document.querySelectorAll('.nav-btn, .bottom-nav-item').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -3055,6 +3538,10 @@ G His research method was revolutionary in that he used experiments rather than 
         if (activeSection === 'vocabulary') openAddModal();
         else showToast('Перейди в Vocabulary для добавления', 'from-accent to-pink-500');
       });
+    }
+
+    function init() {
+      initLogin();
     }
 
     window.addEventListener('DOMContentLoaded', init);
