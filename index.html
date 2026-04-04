@@ -1,0 +1,3174 @@
+<!DOCTYPE html>
+<html lang="ru" class="dark">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+  <meta name="theme-color" content="#0f0f0f">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>IELTS Focus Pro | Mobile-First Skills Hub</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon.png">
+  <link rel="icon" type="image/png" href="icon.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            dark: '#0f0f0f',
+            card: '#1a1a1a',
+            accent: '#8b5cf6',
+            text: '#e5e5e5',
+            muted: '#737373'
+          }
+        }
+      }
+    }
+  </script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    * {
+      font-family: 'Inter', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      box-sizing: border-box;
+    }
+
+    html {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
+
+    body {
+      background-color: #0f0f0f;
+      color: #e5e5e5;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      margin: 0;
+      padding: 0;
+      padding-top: env(safe-area-inset-top);
+    }
+
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* 3D Flip Card System */
+    .flip-card-container {
+      perspective: 1200px;
+      cursor: pointer;
+    }
+
+    .flip-card {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-style: preserve-3d;
+    }
+
+    .flip-card.flipped {
+      transform: rotateY(180deg);
+    }
+
+    .flip-face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      border-radius: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.25rem;
+      overflow: hidden;
+    }
+
+    .flip-front {
+      background: linear-gradient(145deg, rgba(30, 30, 30, 0.95), rgba(20, 20, 20, 0.9));
+      border: 1px solid rgba(139, 92, 246, 0.2);
+      box-shadow:
+        0 4px 24px rgba(0, 0, 0, 0.3),
+        0 1px 0 rgba(255, 255, 255, 0.05) inset;
+    }
+
+    .flip-front::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #8b5cf6, #ec4899, #8b5cf6);
+    }
+
+    .flip-front::after {
+      content: '';
+      position: absolute;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 30px;
+      height: 3px;
+      border-radius: 2px;
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .flip-back {
+      background: linear-gradient(160deg, #1a1a2e, #0f0f1a);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      box-shadow:
+        0 4px 24px rgba(0, 0, 0, 0.4),
+        0 0 40px rgba(139, 92, 246, 0.05) inset;
+      transform: rotateY(180deg);
+    }
+
+    .flip-back::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #ec4899, #8b5cf6, #ec4899);
+    }
+
+    /* Card sizes responsive */
+    @media (max-width: 500px) {
+      .flip-card {
+        aspect-ratio: 1;
+      }
+    }
+
+    .flip-word {
+      font-size: 1.5rem;
+      font-weight: 800;
+      text-align: center;
+      line-height: 1.2;
+      background: linear-gradient(135deg, #ffffff, #c4b5fd);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .flip-translation {
+      font-size: 1.35rem;
+      font-weight: 700;
+      text-align: center;
+      color: #e0e0e0;
+      margin-bottom: 0.5rem;
+    }
+
+    .flip-pos-badge {
+      font-size: 0.6rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      padding: 0.25rem 0.6rem;
+      border-radius: 20px;
+      letter-spacing: 0.05em;
+    }
+
+    .flip-hint {
+      font-size: 0.6rem;
+      color: #737373;
+      position: absolute;
+      bottom: 8px;
+    }
+
+    .flip-delete {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.05);
+      border: none;
+      color: #666;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      z-index: 5;
+      min-height: 28px;
+      min-width: 28px;
+    }
+
+    .flip-delete:hover {
+      background: rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+    }
+
+    .glitch-hover:hover {
+      text-shadow: 2px 0 #8b5cf6, -2px 0 #ec4899;
+      transition: 0.2s;
+    }
+
+    /* Custom scrollbar - modern thin */
+    ::-webkit-scrollbar {
+      width: 3px;
+      height: 3px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #0f0f0f;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(135deg, #8b5cf6, #ec4899);
+      border-radius: 10px;
+    }
+
+    /* Mobile-optimized navigation */
+    .nav-btn {
+      position: relative;
+      overflow: hidden;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .nav-btn::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 0;
+      height: 100%;
+      background: linear-gradient(90deg, rgba(139, 92, 246, 0.2), transparent);
+      transition: width 0.3s ease;
+    }
+
+    .nav-btn:hover::before {
+      width: 100%;
+    }
+
+    .nav-active {
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(139, 92, 246, 0.05));
+      border-left: 3px solid #8b5cf6;
+      box-shadow: 0 2px 8px rgba(139, 92, 246, 0.2);
+    }
+
+    /* Card animations */
+    .skill-card {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-origin: center;
+    }
+
+    .skill-card:active {
+      transform: scale(0.97);
+    }
+
+    .task-item {
+      cursor: pointer;
+      transition: all 0.25s ease;
+      position: relative;
+      overflow: hidden;
+      border-left: 3px solid transparent;
+      background: linear-gradient(135deg, rgba(26, 26, 26, 0.7), rgba(26, 26, 26, 0.4)) !important;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .task-item.task-reading {
+      border-left-color: #60a5fa;
+    }
+
+    .task-item.task-writing {
+      border-left-color: #f472b6;
+    }
+
+    .task-item.task-speaking {
+      border-left-color: #4ade80;
+    }
+
+    .task-item.task-listening {
+      border-left-color: #facc15;
+    }
+
+    .task-item::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #8b5cf6, #ec4899);
+      transition: width 0.3s ease;
+    }
+
+    .task-item:hover::after {
+      width: 100%;
+    }
+
+    .task-item:active {
+      transform: scale(0.98);
+      background: rgba(139, 92, 246, 0.12) !important;
+      box-shadow: 0 2px 16px rgba(139, 92, 246, 0.15);
+    }
+
+    /* Completed task state */
+    .task-item.completed {
+      opacity: 0.5;
+      border-left-color: #22c55e;
+    }
+
+    .task-item.completed::before {
+      content: '✓';
+      position: absolute;
+      top: 50%;
+      right: 12px;
+      transform: translateY(-50%);
+      color: #22c55e;
+      font-size: 1.1rem;
+      font-weight: bold;
+    }
+
+    /* Toast animation */
+    .toast-notify {
+      animation: slideUpFade 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    @keyframes slideUpFade {
+      from {
+        opacity: 0;
+        transform: translate(-50%, 20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+      }
+    }
+
+    /* Bottom navigation for mobile */
+    .bottom-nav {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(15, 15, 15, 0.97);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(139, 92, 246, 0.15);
+      padding: 0.5rem 0.25rem;
+      padding-bottom: calc(0.5rem + env(safe-area-inset-bottom));
+      justify-content: space-around;
+      z-index: 100;
+    }
+
+    .bottom-nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.2rem;
+      font-size: 0.6rem;
+      transition: all 0.2s;
+      color: #737373;
+      padding: 0.4rem 0.2rem;
+      min-width: 48px;
+      min-height: 44px;
+      justify-content: center;
+      border-radius: 12px;
+    }
+
+    .bottom-nav-item.active {
+      color: #8b5cf6;
+      background: rgba(139, 92, 246, 0.1);
+    }
+
+    .bottom-nav-item i {
+      font-size: 1.1rem;
+    }
+
+    /* Mobile goal panel */
+    .mobile-goal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 200;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .mobile-goal-panel {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #1a1a1a;
+      border-top-left-radius: 24px;
+      border-top-right-radius: 24px;
+      padding: 1.5rem;
+      padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
+      z-index: 201;
+      transform: translateY(100%);
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      border-top: 1px solid rgba(139, 92, 246, 0.3);
+    }
+
+    .mobile-goal-panel.open {
+      transform: translateY(0);
+    }
+
+    .mobile-goal-handle {
+      width: 36px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 2px;
+      margin: 0 auto 1rem;
+    }
+
+    @media (max-width: 768px) {
+      .bottom-nav {
+        display: flex;
+      }
+
+      main {
+        padding: 1rem !important;
+        padding-bottom: calc(80px + env(safe-area-inset-bottom)) !important;
+        padding-top: 0.75rem !important;
+      }
+
+      .sidebar-desktop {
+        display: none !important;
+      }
+
+      .skill-card {
+        margin-bottom: 0.5rem;
+      }
+
+      /* Mobile typography adjustments */
+      h2 {
+        font-size: 1.5rem !important;
+      }
+
+      .task-item {
+        padding: 0.875rem !important;
+        border-radius: 0.75rem !important;
+      }
+
+      .task-item h3 {
+        font-size: 0.85rem !important;
+      }
+
+      .task-item p {
+        font-size: 0.75rem !important;
+      }
+
+      /* Vocabulary cards mobile */
+      .flip-card {
+        aspect-ratio: 1;
+      }
+
+      .flip-word {
+        font-size: 1.2rem;
+      }
+
+      .flip-translation {
+        font-size: 1.1rem;
+      }
+
+      .flip-face {
+        padding: 1rem;
+        border-radius: 1rem;
+      }
+
+      /* Sticky header mobile */
+      .sticky {
+        padding-top: 0.5rem !important;
+        padding-bottom: 0.5rem !important;
+      }
+
+      /* Modal mobile fix */
+      #wordModal .bg-card {
+        margin: 0.5rem;
+        max-height: 90vh;
+        overflow-y: auto;
+        border-radius: 1.25rem !important;
+      }
+
+      #wordModal input,
+      #wordModal select,
+      #wordModal textarea {
+        font-size: 16px !important;
+        /* prevents iOS zoom */
+        padding: 0.75rem !important;
+      }
+
+      /* Grid two columns on phones */
+      #vocabGrid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 0.65rem !important;
+      }
+    }
+
+    /* Very small phones: still 2 cols but tighter */
+    @media (max-width: 375px) {
+      #vocabGrid {
+        gap: 0.5rem !important;
+      }
+
+      .flip-word {
+        font-size: 1rem;
+      }
+
+      .flip-translation {
+        font-size: 0.9rem;
+      }
+
+      .flip-face {
+        padding: 0.75rem;
+      }
+    }
+
+    /* Very small phones (SE, mini etc) */
+    @media (max-width: 375px) {
+      .bottom-nav-item {
+        font-size: 0.55rem;
+        min-width: 40px;
+      }
+
+      .bottom-nav-item i {
+        font-size: 1rem;
+      }
+
+      main {
+        padding: 0.75rem !important;
+      }
+
+      h2 {
+        font-size: 1.25rem !important;
+      }
+    }
+
+    /* Medium phones landscape */
+    @media (max-width: 768px) and (orientation: landscape) {
+      .bottom-nav {
+        padding: 0.35rem 0.5rem;
+        padding-bottom: calc(0.35rem + env(safe-area-inset-bottom));
+      }
+
+      .bottom-nav-item i {
+        font-size: 1rem;
+      }
+
+      main {
+        padding-bottom: 60px !important;
+      }
+    }
+
+    /* Floating action button */
+    .fab {
+      position: fixed;
+      bottom: calc(70px + env(safe-area-inset-bottom));
+      right: 16px;
+      width: 52px;
+      height: 52px;
+      border-radius: 26px;
+      background: linear-gradient(135deg, #8b5cf6, #a855f7);
+      box-shadow: 0 4px 16px rgba(139, 92, 246, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      z-index: 90;
+    }
+
+    .fab:active {
+      transform: scale(0.9);
+    }
+
+    @media (min-width: 769px) {
+      .fab {
+        display: none;
+      }
+
+      .mobile-goal-overlay,
+      .mobile-goal-panel {
+        display: none !important;
+      }
+    }
+
+    /* Smooth transitions */
+    .page-transition {
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Progress ring */
+    .progress-ring {
+      transition: stroke-dashoffset 0.5s ease;
+    }
+
+    /* Touch-friendly buttons */
+    button {
+      min-height: 44px;
+      min-width: 44px;
+    }
+
+    /* Pull-to-refresh prevention */
+    body {
+      overscroll-behavior-y: contain;
+    }
+
+    /* Staggered card entrance animation */
+    @keyframes cardAppear {
+      from {
+        opacity: 0;
+        transform: translateY(24px) scale(0.95);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .card-animate {
+      opacity: 0;
+      animation: cardAppear 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* Word detail modal */
+    .word-detail-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      z-index: 300;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .word-detail-card {
+      background: linear-gradient(160deg, #1e1e2e, #15151f);
+      border: 1px solid rgba(139, 92, 246, 0.25);
+      border-radius: 1.5rem;
+      padding: 2rem;
+      max-width: 420px;
+      width: 100%;
+      position: relative;
+      animation: modalPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5), 0 0 80px rgba(139, 92, 246, 0.08);
+    }
+
+    @keyframes modalPop {
+      from {
+        opacity: 0;
+        transform: scale(0.85) translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    .word-detail-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      border: none;
+      color: #999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 1rem;
+    }
+
+    .word-detail-close:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: white;
+    }
+
+    /* Search input */
+    .search-input {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 0.65rem 1rem 0.65rem 2.5rem;
+      color: white;
+      font-size: 0.85rem;
+      width: 100%;
+      max-width: 280px;
+      transition: all 0.25s;
+      outline: none;
+    }
+
+    .search-input:focus {
+      border-color: #8b5cf6;
+      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+    }
+
+    .search-wrapper {
+      position: relative;
+    }
+
+    .search-wrapper i {
+      position: absolute;
+      left: 0.85rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #737373;
+      font-size: 0.8rem;
+    }
+
+    /* Progress stats bar */
+    .progress-stats {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .stat-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 0.35rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Quiz modal */
+    .quiz-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.9);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      z-index: 300;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .quiz-card {
+      background: linear-gradient(160deg, #1a1a2e, #111118);
+      border: 1px solid rgba(139, 92, 246, 0.2);
+      border-radius: 1.5rem;
+      padding: 2rem;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      animation: modalPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
+    }
+
+    .quiz-word {
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #8b5cf6, #ec4899);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 1.5rem 0;
+    }
+
+    .quiz-answer {
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .quiz-answer.revealed {
+      opacity: 1;
+      max-height: 200px;
+    }
+
+    /* Category Pack Cards */
+    .pack-card {
+      border-radius: 1.25rem;
+      padding: 1.5rem;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      aspect-ratio: 1;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .pack-card:active {
+      transform: scale(0.96);
+    }
+
+    .pack-card .pack-emoji {
+      font-size: 2.5rem;
+      margin-bottom: 0.75rem;
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+    }
+
+    .pack-card .pack-name {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 0.25rem;
+    }
+
+    .pack-card .pack-count {
+      font-size: 0.65rem;
+      font-family: 'JetBrains Mono', monospace;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .pack-card::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    /* Back button */
+    .back-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #8b5cf6;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: none;
+      border: none;
+      padding: 0.5rem 0;
+    }
+
+    .back-btn:hover {
+      color: #a78bfa;
+    }
+
+    @media (max-width: 768px) {
+      .pack-card {
+        padding: 1rem;
+      }
+
+      .pack-card .pack-emoji {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .pack-card .pack-name {
+        font-size: 0.8rem;
+      }
+    }
+
+    /* Reading split layout — text left, questions right */
+    .reading-split-layout {
+      display: flex;
+      gap: 1rem;
+      height: calc(100vh - 140px);
+      min-height: 400px;
+    }
+
+    .reading-text-panel {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.25rem;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 1rem;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(139, 92, 246, 0.3) transparent;
+    }
+
+    .reading-questions-panel {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.25rem;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 1rem;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(139, 92, 246, 0.3) transparent;
+    }
+
+    .reading-text-panel::-webkit-scrollbar,
+    .reading-questions-panel::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .reading-text-panel::-webkit-scrollbar-track,
+    .reading-questions-panel::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .reading-text-panel::-webkit-scrollbar-thumb,
+    .reading-questions-panel::-webkit-scrollbar-thumb {
+      background: rgba(139, 92, 246, 0.3);
+      border-radius: 3px;
+    }
+
+    .reading-text-panel::-webkit-scrollbar-thumb:hover,
+    .reading-questions-panel::-webkit-scrollbar-thumb:hover {
+      background: rgba(139, 92, 246, 0.5);
+    }
+
+    @media (max-width: 768px) {
+      .reading-split-layout {
+        flex-direction: column;
+        height: auto;
+      }
+
+      .reading-text-panel {
+        max-height: 50vh;
+        flex: none;
+      }
+
+      .reading-questions-panel {
+        flex: none;
+        padding-bottom: 5rem;
+      }
+    }
+
+    /* Highlighter styles */
+    .highlighter-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+      padding: 0.5rem 0.75rem;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .hl-color-btn {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+
+    .hl-color-btn:hover {
+      transform: scale(1.15);
+    }
+
+    .hl-color-btn.active {
+      border-color: white;
+      box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+    }
+
+    .hl-action-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.3rem 0.65rem;
+      border-radius: 0.5rem;
+      background: rgba(255, 255, 255, 0.06);
+      border: none;
+      color: #999;
+      font-size: 0.7rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .hl-action-btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: white;
+    }
+
+    .hl-action-btn.active {
+      background: rgba(139, 92, 246, 0.2);
+      color: #c4b5fd;
+    }
+
+    mark.hl-yellow {
+      background: rgba(250, 204, 21, 0.35);
+      color: inherit;
+      border-radius: 2px;
+      padding: 0 1px;
+      cursor: pointer;
+    }
+
+    mark.hl-green {
+      background: rgba(34, 197, 94, 0.3);
+      color: inherit;
+      border-radius: 2px;
+      padding: 0 1px;
+      cursor: pointer;
+    }
+
+    mark.hl-pink {
+      background: rgba(236, 72, 153, 0.3);
+      color: inherit;
+      border-radius: 2px;
+      padding: 0 1px;
+      cursor: pointer;
+    }
+
+    mark.hl-blue {
+      background: rgba(59, 130, 246, 0.3);
+      color: inherit;
+      border-radius: 2px;
+      padding: 0 1px;
+      cursor: pointer;
+    }
+
+    .reading-text-panel.hl-mode {
+      cursor: text;
+      user-select: text;
+      -webkit-user-select: text;
+    }
+
+    /* Reading progress bar */
+    .reading-progress {
+      height: 4px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 2px;
+      margin-bottom: 1rem;
+      overflow: hidden;
+    }
+
+    .reading-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #8b5cf6, #22c55e);
+      border-radius: 2px;
+      transition: width 0.4s ease;
+      width: 0%;
+    }
+
+    /* Dictionary popup */
+    .dict-popup {
+      position: fixed;
+      z-index: 400;
+      background: linear-gradient(160deg, #1e1e2e, #15151f);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      border-radius: 1rem;
+      padding: 1rem;
+      max-width: 320px;
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
+      animation: modalPop 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* Writing editor */
+    .writing-editor {
+      width: 100%;
+      min-height: 250px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      color: #e5e5e5;
+      font-size: 0.9rem;
+      line-height: 1.7;
+      resize: vertical;
+      outline: none;
+      font-family: 'Inter', sans-serif;
+      transition: border-color 0.2s;
+    }
+
+    .writing-editor:focus {
+      border-color: #ec4899;
+    }
+
+    .word-count-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.5rem 0;
+    }
+
+    .wc-pill {
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .essay-template {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      margin-top: 0.75rem;
+    }
+
+    .essay-template h4 {
+      font-size: 0.8rem;
+      color: #ec4899;
+      margin-bottom: 0.5rem;
+    }
+
+    .essay-template p {
+      font-size: 0.75rem;
+      color: #737373;
+      line-height: 1.5;
+    }
+
+    /* Speaking recorder */
+    .rec-btn {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      border: 3px solid #22c55e;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .rec-btn.recording {
+      border-color: #ef4444;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+      }
+
+      50% {
+        box-shadow: 0 0 0 12px rgba(239, 68, 68, 0);
+      }
+    }
+
+    .cue-timer-ring {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .cue-timer-ring svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+
+    .cue-timer-ring circle {
+      fill: none;
+      stroke-width: 4;
+      stroke-linecap: round;
+    }
+
+    /* TTS controls */
+    .tts-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .tts-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.4rem 0.85rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .speed-btn {
+      padding: 0.3rem 0.6rem;
+      border-radius: 0.5rem;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid transparent;
+      color: #999;
+      font-size: 0.7rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .speed-btn.active {
+      border-color: #eab308;
+      color: #eab308;
+      background: rgba(234, 179, 8, 0.1);
+    }
+
+    /* Vocabulary matching game */
+    .match-card {
+      padding: 0.75rem 1rem;
+      border-radius: 0.75rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+      font-size: 0.85rem;
+    }
+
+    .match-card.selected {
+      border-color: #8b5cf6;
+      background: rgba(139, 92, 246, 0.15);
+    }
+
+    .match-card.correct {
+      border-color: #22c55e;
+      background: rgba(34, 197, 94, 0.15);
+      pointer-events: none;
+    }
+
+    .match-card.wrong {
+      border-color: #ef4444;
+      background: rgba(239, 68, 68, 0.1);
+    }
+
+    /* Dashboard */
+    .dash-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 1rem;
+      padding: 1.25rem;
+    }
+
+    .streak-fire {
+      font-size: 2.5rem;
+      animation: float 2s ease-in-out infinite;
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-6px);
+      }
+    }
+
+    /* Dashboard */
+    .dash-stat-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 1rem;
+      padding: 1.25rem;
+      text-align: center;
+      transition: all 0.3s;
+    }
+
+    .dash-stat-card:hover {
+      border-color: rgba(139, 92, 246, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .dash-quick-card {
+      border-radius: 1rem;
+      padding: 1.25rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .dash-quick-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    }
+
+    .achievement-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1rem;
+      border-radius: 1rem;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      transition: all 0.3s;
+    }
+
+    .achievement-badge.unlocked {
+      border-color: rgba(139, 92, 246, 0.3);
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.08), rgba(236, 72, 153, 0.05));
+    }
+
+    .achievement-badge.locked {
+      opacity: 0.4;
+      filter: grayscale(0.8);
+    }
+
+    .confetti-piece {
+      position: fixed;
+      z-index: 999;
+      pointer-events: none;
+      animation: confettiFall linear forwards;
+    }
+
+    @keyframes confettiFall {
+      0% {
+        transform: translateY(-10vh) rotate(0deg);
+        opacity: 1;
+      }
+
+      100% {
+        transform: translateY(110vh) rotate(720deg);
+        opacity: 0;
+      }
+    }
+
+    .search-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      z-index: 500;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 12vh 1rem 2rem;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .search-global-input {
+      background: rgba(255, 255, 255, 0.08);
+      border: 2px solid rgba(139, 92, 246, 0.3);
+      border-radius: 1rem;
+      padding: 1rem 1.25rem 1rem 3rem;
+      color: white;
+      font-size: 1.1rem;
+      width: 100%;
+      max-width: 500px;
+      outline: none;
+      transition: all 0.3s;
+    }
+
+    .search-global-input:focus {
+      border-color: #8b5cf6;
+      box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15);
+    }
+
+    .search-results {
+      width: 100%;
+      max-width: 500px;
+      max-height: 60vh;
+      overflow-y: auto;
+      margin-top: 1rem;
+    }
+
+    .search-result-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      border-radius: 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: #e5e5e5;
+    }
+
+    .search-result-item:hover {
+      background: rgba(139, 92, 246, 0.15);
+    }
+
+    .match-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    .match-col {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .lesson-done-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      background: rgba(34, 197, 94, 0.15);
+      color: #22c55e;
+      padding: 0.15rem 0.5rem;
+      border-radius: 999px;
+      font-size: 0.6rem;
+      font-weight: 700;
+      margin-left: auto;
+    }
+  </style>
+</head>
+
+<body class="h-screen flex flex-col md:flex-row overflow-hidden bg-gradient-to-br from-dark via-dark to-card">
+
+  <!-- DESKTOP SIDEBAR -->
+  <aside id="sidebar"
+    class="sidebar-desktop w-20 md:w-64 bg-card/50 backdrop-blur-xl border-r border-white/10 flex flex-col justify-between py-4 md:py-6 transition-all duration-300 shrink-0 overflow-y-auto">
+    <div>
+      <div class="px-3 md:px-6 mb-6 md:mb-10">
+        <h1
+          class="text-xl md:text-2xl font-bold mono glitch-hover cursor-pointer text-center md:text-left bg-gradient-to-r from-white to-accent bg-clip-text text-transparent">
+          IELTS<span class="text-accent">.io</span></h1>
+      </div>
+
+      <nav class="space-y-1.5 px-2 md:px-3" id="mainNav">
+        <button data-section="dashboard"
+          class="nav-btn w-full flex items-center gap-3 md:gap-4 px-3 md:px-4 py-2.5 md:py-3 text-muted hover:text-white hover:bg-white/5 rounded-xl transition-all text-left">
+          <i class="fas fa-th-large w-5 text-center text-purple-400"></i>
+          <span class="hidden md:inline text-sm md:text-base font-medium">Dashboard</span>
+        </button>
+        <button data-section="vocabulary"
+          class="nav-btn w-full flex items-center gap-3 md:gap-4 px-3 md:px-4 py-2.5 md:py-3 text-muted hover:text-white hover:bg-white/5 rounded-xl transition-all text-left">
+          <i class="fas fa-brain w-5 text-center text-accent"></i>
+          <span class="hidden md:inline text-sm md:text-base font-medium">Vocabulary Deck</span>
+        </button>
+        <button data-section="reading"
+          class="nav-btn w-full flex items-center gap-3 md:gap-4 px-3 md:px-4 py-2.5 md:py-3 text-muted hover:text-white hover:bg-white/5 rounded-xl transition-all text-left">
+          <i class="fas fa-book-open w-5 text-center text-blue-400"></i>
+          <span class="hidden md:inline text-sm md:text-base font-medium">Reading Lab</span>
+        </button>
+        <button data-section="writing"
+          class="nav-btn w-full flex items-center gap-3 md:gap-4 px-3 md:px-4 py-2.5 md:py-3 text-muted hover:text-white hover:bg-white/5 rounded-xl transition-all text-left">
+          <i class="fas fa-pen-fancy w-5 text-center text-pink-400"></i>
+          <span class="hidden md:inline text-sm md:text-base font-medium">Writing Flow</span>
+        </button>
+        <button data-section="speaking"
+          class="nav-btn w-full flex items-center gap-3 md:gap-4 px-3 md:px-4 py-2.5 md:py-3 text-muted hover:text-white hover:bg-white/5 rounded-xl transition-all text-left">
+          <i class="fas fa-microphone-alt w-5 text-center text-green-400"></i>
+          <span class="hidden md:inline text-sm md:text-base font-medium">Speaking Studio</span>
+        </button>
+        <button data-section="listening"
+          class="nav-btn w-full flex items-center gap-3 md:gap-4 px-3 md:px-4 py-2.5 md:py-3 text-muted hover:text-white hover:bg-white/5 rounded-xl transition-all text-left">
+          <i class="fas fa-headphones w-5 text-center text-yellow-400"></i>
+          <span class="hidden md:inline text-sm md:text-base font-medium">Listening Lab</span>
+        </button>
+      </nav>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main id="mainContent" class="flex-1 overflow-y-auto p-4 md:p-8 relative page-transition">
+    <div class="flex items-center justify-center h-full">
+      <div class="text-center">
+        <i class="fas fa-spinner fa-pulse text-3xl text-accent mb-3"></i>
+        <p class="text-muted">Loading your IELTS hub...</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- MOBILE BOTTOM NAVIGATION -->
+  <div class="bottom-nav" id="bottomNav">
+    <button data-section="dashboard" class="bottom-nav-item">
+      <i class="fas fa-th-large"></i>
+      <span>Home</span>
+    </button>
+    <button data-section="vocabulary" class="bottom-nav-item">
+      <i class="fas fa-brain"></i>
+      <span>Words</span>
+    </button>
+    <button data-section="reading" class="bottom-nav-item">
+      <i class="fas fa-book-open"></i>
+      <span>Read</span>
+    </button>
+    <button data-section="writing" class="bottom-nav-item">
+      <i class="fas fa-pen-fancy"></i>
+      <span>Write</span>
+    </button>
+    <button data-section="speaking" class="bottom-nav-item">
+      <i class="fas fa-microphone-alt"></i>
+      <span>Speak</span>
+    </button>
+    <button data-section="listening" class="bottom-nav-item">
+      <i class="fas fa-headphones"></i>
+      <span>Listen</span>
+    </button>
+  </div>
+
+  <!-- FLOATING ACTION BUTTON for mobile quick add -->
+  <div class="fab" id="fabButton">
+    <i class="fas fa-plus text-white text-lg"></i>
+  </div>
+
+  <!-- LOGIN OVERLAY -->
+  <div id="loginOverlay"
+    class="fixed inset-0 bg-dark z-[1000] flex items-center justify-center p-4 transition-opacity duration-300">
+    <div class="absolute inset-0 bg-dark/95 backdrop-blur-3xl z-0"></div>
+    <div
+      class="relative z-10 w-full max-w-sm p-8 bg-card border border-white/10 rounded-[2rem] shadow-2xl text-center flex flex-col items-center">
+      <div
+        class="w-20 h-20 bg-gradient-to-br from-accent to-pink-500 rounded-3xl flex items-center justify-center mb-6 shadow-lg shadow-accent/20">
+        <i class="fas fa-user-astronaut text-4xl text-white"></i>
+      </div>
+      <h1 class="text-3xl font-extrabold text-white mb-2 tracking-tight">IELTS Pro</h1>
+      <p class="text-gray-400 text-sm mb-8 px-2 leading-relaxed">Введите имя, чтобы создать профиль и начать обучение с
+        чистого листа.</p>
+
+      <div class="w-full relative mb-5 group">
+        <i
+          class="fas fa-user absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-accent transition-colors"></i>
+        <input type="text" id="usernameInput" placeholder="Ваше логин..."
+          class="w-full bg-white/5 border-2 border-white/5 rounded-2xl py-4 pl-12 pr-4 text-white placeholder-gray-500 focus:outline-none focus:border-accent transition-all text-base font-medium shadow-inner"
+          autocomplete="off">
+      </div>
+
+      <button id="loginBtn"
+        class="w-full bg-white text-dark font-bold py-4 rounded-2xl hover:bg-gray-100 hover:scale-[1.02] active:scale-[0.98] transition-all text-base shadow-xl flex items-center justify-center gap-2">
+        <span>Продолжить</span>
+        <i class="fas fa-arrow-right text-sm"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toastMsg"
+    class="fixed bottom-20 md:bottom-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-accent to-pink-500 text-white px-5 py-2.5 rounded-full text-xs md:text-sm font-mono z-50 hidden shadow-2xl whitespace-nowrap max-w-[90vw] text-center">
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+  <script src="reading.js?v=2"></script>
+  <script src="writing.js?v=2"></script>
+  <script src="speaking.js?v=2"></script>
+  <script src="listening.js?v=2"></script>
+  <script src="vocab.js?v=2"></script>
+  <script>
+    // ============================================================
+    // LESSON DATA — Добавляй свои уроки в массивы ниже!
+    // Каждый урок имеет: id, title, и content (текст/задание)
+    // ============================================================
+
+    let activeCategory = null; // null = show categories, string = show cards in category
+    
+    let currentMinutes = 0;
+    const goalMax = 50;
+
+    let activeSection = 'vocabulary';
+    let activeSkillCategory = null; // для скилл-секций
+
+    // Helper functions
+    function showToast(message, bgClass = "from-accent to-pink-500") {
+      const toast = document.getElementById('toastMsg');
+      toast.textContent = message;
+      toast.classList.remove('hidden');
+      toast.className = `fixed bottom-20 md:bottom-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-r ${bgClass} text-white px-5 py-2.5 rounded-full text-xs md:text-sm font-mono z-50 shadow-2xl toast-notify max-w-[90vw] text-center`;
+      setTimeout(() => toast.classList.add('hidden'), 2200);
+    }
+
+    function updateGoalUI() {
+      const percent = (currentMinutes / goalMax) * 100;
+      const widthStr = `${Math.min(100, percent)}%`;
+      const textStr = `${currentMinutes} / ${goalMax} mins`;
+      // Desktop sidebar
+      const bar = document.getElementById('goalProgressBar');
+      const txt = document.getElementById('goalMinutesText');
+      if (bar) bar.style.width = widthStr;
+      if (txt) txt.innerText = textStr;
+      // Mobile panel
+      const mBar = document.getElementById('mobileGoalProgressBar');
+      const mTxt = document.getElementById('mobileGoalMinutesText');
+      if (mBar) mBar.style.width = widthStr;
+      if (mTxt) mTxt.innerText = textStr;
+      if (currentMinutes >= goalMax) showToast("🏆 GOAL ACHIEVED! Incredible focus!", "from-green-500 to-emerald-500");
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/[&<>]/g, function (m) {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
+      });
+    }
+
+    // Vocabulary Section
+    let vocabSearchQuery = '';
+
+    function renderVocabularySection() {
+      if (activeCategory) {
+        renderCategoryCards(activeCategory);
+      } else {
+        renderCategoryPacks();
+      }
+    }
+
+    // Show all category packs
+    function renderCategoryPacks() {
+      let html = `
+        <div class="sticky top-0 bg-dark/80 backdrop-blur-md z-10 py-3 mb-4">
+          <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-3">
+            <div>
+              <h2 class="text-2xl md:text-4xl font-bold bg-gradient-to-r from-white to-accent bg-clip-text text-transparent">Vocabulary <span class="text-accent">Deck</span></h2>
+              <p class="text-xs md:text-sm text-muted mt-1">${vocabulary.length} слов • ${categories.length} категорий</p>
+            </div>
+            <div class="flex gap-2 items-center flex-wrap">
+              <button id="quizModeBtn" class="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-full font-medium text-sm transition-all flex items-center gap-1.5"><i class="fas fa-bolt text-yellow-400"></i> Quiz</button>
+            </div>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5" id="categoryGrid"></div>`;
+      document.getElementById('mainContent').innerHTML = html;
+
+      const grid = document.getElementById('categoryGrid');
+      grid.innerHTML = categories.map((cat, idx) => {
+        const count = vocabulary.filter(v => v.category === cat.id).length;
+        const delay = Math.min(idx * 80, 600);
+        return `
+          <div class="pack-card card-animate" style="background:${cat.gradient};animation-delay:${delay}ms" data-cat="${cat.id}">
+            <div class="pack-emoji">${cat.emoji}</div>
+            <div class="pack-name">${escapeHtml(cat.name)}</div>
+            <div class="pack-count">${count} слов</div>
+          </div>`;
+      }).join('');
+
+      document.querySelectorAll('.pack-card').forEach(el => {
+        el.addEventListener('click', () => {
+          activeCategory = el.dataset.cat;
+          renderVocabularySection();
+        });
+      });
+
+      document.getElementById('quizModeBtn')?.addEventListener('click', startQuiz);
+    }
+
+    // Show cards inside a category
+    function renderCategoryCards(catId) {
+      const cat = categories.find(c => c.id === catId);
+      if (!cat) { activeCategory = null; renderCategoryPacks(); return; }
+
+      const catWords = vocabulary.filter(v => v.category === catId);
+
+      const html = `
+        <div class="sticky top-0 bg-dark/80 backdrop-blur-md z-10 py-3 mb-4">
+          <button class="back-btn" id="backToCategories"><i class="fas fa-arrow-left"></i> Назад</button>
+          <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-3 mt-2">
+            <div class="flex items-center gap-3">
+              <span style="font-size:2rem">${cat.emoji}</span>
+              <div>
+                <h2 class="text-xl md:text-3xl font-bold text-white">${escapeHtml(cat.name)}</h2>
+                <p class="text-xs text-muted mt-0.5">${catWords.length} слов • Tap to flip</p>
+              </div>
+            </div>
+            <div class="flex gap-2 items-center">
+              <button id="quizCatBtn" class="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-full font-medium text-sm transition-all flex items-center gap-1.5"><i class="fas fa-bolt text-yellow-400"></i> Quiz</button>
+              <button id="matchGameBtn" class="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-full font-medium text-sm transition-all flex items-center gap-1.5"><i class="fas fa-puzzle-piece text-green-400"></i> Match</button>
+              <button id="openAddWordBtn" class="bg-gradient-to-r from-accent to-pink-500 text-white px-5 py-2.5 rounded-full font-bold hover:shadow-lg transition-all text-sm">+ New</button>
+            </div>
+          </div>
+          <div class="search-wrapper mt-3">
+            <i class="fas fa-search"></i>
+            <input type="text" id="vocabSearch" class="search-input" placeholder="Поиск слов..." value="${escapeHtml(vocabSearchQuery)}">
+          </div>
+        </div>
+        <div id="vocabGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5"></div>`;
+      document.getElementById('mainContent').innerHTML = html;
+
+      renderVocabCards(catId);
+
+      document.getElementById('backToCategories')?.addEventListener('click', () => {
+        activeCategory = null;
+        vocabSearchQuery = '';
+        renderVocabularySection();
+      });
+      document.getElementById('openAddWordBtn')?.addEventListener('click', () => openAddModal(catId));
+      document.getElementById('quizCatBtn')?.addEventListener('click', () => startQuiz(catId));
+      document.getElementById('matchGameBtn')?.addEventListener('click', () => startMatchingGame(catId));
+      document.getElementById('vocabSearch')?.addEventListener('input', (e) => {
+        vocabSearchQuery = e.target.value;
+        renderVocabCards(catId);
+      });
+    }
+
+    const posColors = {
+      'Adjective': { bg: 'bg-accent/20', text: 'text-accent', dot: '#8b5cf6', label: 'ADJ' },
+      'Noun': { bg: 'bg-blue-500/20', text: 'text-blue-400', dot: '#60a5fa', label: 'NOUN' },
+      'Verb': { bg: 'bg-pink-500/20', text: 'text-pink-400', dot: '#f472b6', label: 'VERB' },
+      'Adverb': { bg: 'bg-emerald-500/20', text: 'text-emerald-400', dot: '#34d399', label: 'ADV' }
+    };
+
+    function renderVocabCards(catId) {
+      const grid = document.getElementById('vocabGrid');
+      if (!grid) return;
+
+      let catWords = vocabulary.filter(v => v.category === catId);
+
+      // Filter by search
+      const query = vocabSearchQuery.toLowerCase().trim();
+      const filtered = query
+        ? catWords.filter(c => c.word.toLowerCase().includes(query) || c.translation.toLowerCase().includes(query))
+        : catWords;
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `<div class="col-span-full text-center py-16">
+          <i class="fas ${query ? 'fa-search' : 'fa-book-open'} text-4xl text-muted mb-3"></i>
+          <p class="text-muted">${query ? 'Нет слов по запросу "' + escapeHtml(query) + '"' : 'Пусто. Добавьте первое слово!'}</p>
+        </div>`;
+        return;
+      }
+
+      grid.innerHTML = filtered.map((card, idx) => {
+        const pc = posColors[card.pos] || posColors['Adjective'];
+        const delay = Math.min(idx * 60, 600);
+        return `
+          <div class="flip-card-container card-animate" style="animation-delay:${delay}ms" data-id="${card.id}">
+            <div class="flip-card" id="flipCard${card.id}">
+              <div class="flip-face flip-front">
+                <button class="flip-delete deleteVocabBtn" data-id="${card.id}"><i class="fas fa-trash-alt"></i></button>
+                <span class="flip-pos-badge ${pc.bg} ${pc.text}">${card.pos}</span>
+                <div class="flip-word mt-3">${escapeHtml(card.word)}</div>
+                <span class="flip-hint"><i class="fas fa-sync-alt"></i> tap to flip</span>
+              </div>
+              <div class="flip-face flip-back">
+                <span class="flip-pos-badge bg-white/10 text-gray-300">${card.pos}</span>
+                <div class="flip-translation mt-2">${escapeHtml(card.translation || '')}</div>
+                <p class="text-gray-400 text-xs text-center mt-1 leading-relaxed">${escapeHtml(card.definition)}</p>
+                <div class="mt-auto pt-3 text-[10px] italic text-gray-600 text-center">"${escapeHtml(card.example)}"</div>
+                <span class="flip-hint"><i class="fas fa-sync-alt"></i> tap to flip</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Flip on tap
+      document.querySelectorAll('.flip-card-container').forEach(el => {
+        el.addEventListener('click', (e) => {
+          if (e.target.closest('.deleteVocabBtn')) return;
+          const id = el.dataset.id;
+          const flipCard = document.getElementById('flipCard' + id);
+          if (flipCard) flipCard.classList.toggle('flipped');
+        });
+      });
+
+      document.querySelectorAll('.deleteVocabBtn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const id = parseInt(btn.dataset.id);
+          const container = btn.closest('.flip-card-container');
+          if (container) {
+            container.style.transform = 'scale(0)';
+            container.style.opacity = '0';
+            container.style.transition = 'all 0.3s ease';
+            setTimeout(() => {
+              vocabulary = vocabulary.filter(v => v.id !== id);
+              saveVocabulary();
+              renderVocabCards(activeCategory);
+              showToast("🗑️ Card removed", "from-red-500 to-orange-500");
+            }, 300);
+          }
+        });
+      });
+    }
+
+    // Beautiful word detail modal
+    function openWordDetail(word) {
+      const pc = posColors[word.pos] || posColors['Adjective'];
+      const html = `
+        <div class="word-detail-overlay" id="wordDetailOverlay">
+          <div class="word-detail-card">
+            <button class="word-detail-close" id="closeWordDetail"><i class="fas fa-times"></i></button>
+            <div class="flex items-center gap-2 mb-4">
+              <span style="width:10px;height:10px;border-radius:50%;background:${pc.dot};box-shadow:0 0 12px ${pc.dot}60"></span>
+              <span class="text-xs font-mono font-bold ${pc.bg} ${pc.text} px-3 py-1 rounded-full">${word.pos}</span>
+            </div>
+            <h2 class="text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-white via-gray-200 to-accent bg-clip-text text-transparent mb-1">${escapeHtml(word.word)}</h2>
+            <p class="text-xl text-gray-300 font-semibold mb-3">${escapeHtml(word.translation || '')}</p>
+            <div class="mt-4 p-4 rounded-xl bg-white/5 border border-white/5">
+              <p class="text-xs text-muted uppercase tracking-wider mb-1.5 font-semibold">Definition</p>
+              <p class="text-gray-200 text-base leading-relaxed">${escapeHtml(word.definition)}</p>
+            </div>
+            <div class="mt-3 p-4 rounded-xl bg-white/5 border border-white/5">
+              <p class="text-xs text-muted uppercase tracking-wider mb-1.5 font-semibold">Example</p>
+              <p class="text-gray-300 text-sm italic leading-relaxed">"${escapeHtml(word.example)}"</p>
+            </div>
+            <div class="mt-5 flex gap-2">
+              <button id="speakWordBtn" class="flex-1 flex items-center justify-center gap-2 bg-accent/20 hover:bg-accent/40 text-accent px-4 py-2.5 rounded-xl transition-all text-sm font-medium"><i class="fas fa-volume-up"></i> Listen</button>
+              <button id="copyWordBtn" class="flex-1 flex items-center justify-center gap-2 bg-white/5 hover:bg-white/15 px-4 py-2.5 rounded-xl transition-all text-sm font-medium text-gray-300"><i class="fas fa-copy"></i> Copy</button>
+            </div>
+          </div>
+        </div>`;
+      document.body.insertAdjacentHTML('beforeend', html);
+      const overlay = document.getElementById('wordDetailOverlay');
+      document.getElementById('closeWordDetail')?.addEventListener('click', () => overlay?.remove());
+      overlay?.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+      // Speak button
+      document.getElementById('speakWordBtn')?.addEventListener('click', () => {
+        if ('speechSynthesis' in window) {
+          const utter = new SpeechSynthesisUtterance(word.word);
+          utter.lang = 'en-US';
+          utter.rate = 0.85;
+          speechSynthesis.speak(utter);
+        } else showToast('Speech not supported', 'from-red-500 to-orange-500');
+      });
+      // Copy button
+      document.getElementById('copyWordBtn')?.addEventListener('click', () => {
+        navigator.clipboard?.writeText(`${word.word} — ${word.definition}`).then(() => {
+          showToast('📋 Copied to clipboard!', 'from-green-500 to-emerald-500');
+        });
+      });
+    }
+
+    // Flashcard Quiz Mode
+    let quizIndex = 0;
+    function startQuiz(catId) {
+      const pool = catId ? vocabulary.filter(v => v.category === catId) : vocabulary;
+      if (pool.length < 2) { showToast('Добавьте больше слов!', 'from-red-500 to-orange-500'); return; }
+      const shuffled = [...pool].sort(() => Math.random() - 0.5);
+      quizIndex = 0;
+      showQuizCard(shuffled);
+    }
+
+    function showQuizCard(cards) {
+      if (quizIndex >= cards.length) {
+        document.getElementById('quizOverlay')?.remove();
+        showToast(`🎉 Quiz complete! ${cards.length} words reviewed`, 'from-green-500 to-emerald-500');
+        return;
+      }
+      const card = cards[quizIndex];
+      const pc = posColors[card.pos] || posColors['Adjective'];
+      const existing = document.getElementById('quizOverlay');
+      if (existing) existing.remove();
+
+      const html = `
+        <div class="quiz-overlay" id="quizOverlay">
+          <div class="quiz-card">
+            <p class="text-muted text-xs font-mono mb-2">${quizIndex + 1} / ${cards.length}</p>
+            <div class="w-full bg-gray-700/30 h-1 rounded-full mb-4 overflow-hidden">
+              <div class="bg-gradient-to-r from-accent to-pink-500 h-1 rounded-full transition-all duration-300" style="width:${((quizIndex + 1) / cards.length * 100)}%"></div>
+            </div>
+            <p class="text-xs ${pc.text} font-mono">${card.pos}</p>
+            <div class="quiz-word">${escapeHtml(card.word)}</div>
+            <p class="text-muted text-sm mb-4">Do you know this word?</p>
+            <div class="quiz-answer" id="quizAnswer">
+              <div class="p-4 rounded-xl bg-white/5 border border-white/5 text-left mb-4">
+                <p class="text-gray-200 text-sm">${escapeHtml(card.definition)}</p>
+                <p class="text-gray-500 text-xs italic mt-2">"${escapeHtml(card.example)}"</p>
+              </div>
+            </div>
+            <div class="flex gap-3" id="quizBtns">
+              <button id="quizRevealBtn" class="flex-1 bg-accent/30 hover:bg-accent/50 text-accent py-3 rounded-xl font-bold transition-all"><i class="fas fa-eye"></i> Reveal</button>
+              <button id="quizSkipBtn" class="flex-1 bg-white/10 hover:bg-white/20 py-3 rounded-xl font-medium transition-all text-gray-300">Skip →</button>
+            </div>
+            <button id="quizCloseBtn" class="mt-4 text-xs text-muted hover:text-white transition-all"><i class="fas fa-times"></i> Exit Quiz</button>
+          </div>
+        </div>`;
+      document.body.insertAdjacentHTML('beforeend', html);
+
+      document.getElementById('quizRevealBtn')?.addEventListener('click', () => {
+        document.getElementById('quizAnswer')?.classList.add('revealed');
+        document.getElementById('quizBtns').innerHTML = `
+          <button id="quizKnewBtn" class="flex-1 bg-green-500/20 hover:bg-green-500/40 text-green-400 py-3 rounded-xl font-bold transition-all"><i class="fas fa-check"></i> Knew it</button>
+          <button id="quizDidntBtn" class="flex-1 bg-red-500/20 hover:bg-red-500/40 text-red-400 py-3 rounded-xl font-bold transition-all"><i class="fas fa-times"></i> Didn't</button>`;
+        document.getElementById('quizKnewBtn')?.addEventListener('click', () => { quizIndex++; showQuizCard(cards); });
+        document.getElementById('quizDidntBtn')?.addEventListener('click', () => { quizIndex++; showQuizCard(cards); });
+      });
+      document.getElementById('quizSkipBtn')?.addEventListener('click', () => { quizIndex++; showQuizCard(cards); });
+      document.getElementById('quizCloseBtn')?.addEventListener('click', () => document.getElementById('quizOverlay')?.remove());
+    }
+
+    function openAddModal(catId) {
+      const currentCat = catId || activeCategory || categories[0].id;
+      const catOptions = categories.map(c =>
+        `<option value="${c.id}" ${c.id === currentCat ? 'selected' : ''}>${c.emoji} ${c.name}</option>`
+      ).join('');
+      const modalHtml = `
+                <div id="wordModal" class="fixed inset-0 bg-black/90 backdrop-blur-md flex items-center justify-center z-50 p-4" style="animation: fadeIn 0.2s;">
+                    <div class="bg-card rounded-2xl max-w-md w-full p-6 border border-accent/30 shadow-2xl" style="animation: modalPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);">
+                        <h3 class="text-2xl font-bold mb-5 bg-gradient-to-r from-accent to-pink-500 bg-clip-text text-transparent">Новое слово</h3>
+                        <select id="newCategory" class="w-full bg-black/40 border border-white/10 rounded-xl p-3 mb-3 text-white focus:outline-none">
+                            ${catOptions}
+                        </select>
+                        <input type="text" id="newWord" placeholder="English word" class="w-full bg-black/40 border border-white/10 rounded-xl p-3 mb-3 text-white focus:outline-none focus:border-accent transition">
+                        <input type="text" id="newTranslation" placeholder="Перевод (на русском)" class="w-full bg-black/40 border border-white/10 rounded-xl p-3 mb-3 text-white focus:outline-none focus:border-accent transition">
+                        <select id="newPos" class="w-full bg-black/40 border border-white/10 rounded-xl p-3 mb-3 text-white focus:outline-none">
+                            <option>Noun</option><option>Adjective</option><option>Verb</option><option>Adverb</option>
+                        </select>
+                        <input type="text" id="newEx" placeholder="Example sentence" class="w-full bg-black/40 border border-white/10 rounded-xl p-3 mb-4 text-white focus:outline-none">
+                        <div class="flex gap-3 justify-end">
+                            <button id="closeModal" class="px-5 py-2 bg-white/10 rounded-full hover:bg-white/20 transition">Отмена</button>
+                            <button id="saveWord" class="px-5 py-2 bg-gradient-to-r from-accent to-pink-500 rounded-full font-bold hover:shadow-lg transition">Сохранить</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+      document.body.insertAdjacentHTML('beforeend', modalHtml);
+      document.getElementById('closeModal')?.addEventListener('click', () => document.getElementById('wordModal')?.remove());
+      document.getElementById('saveWord')?.addEventListener('click', () => {
+        const word = document.getElementById('newWord').value.trim();
+        const translation = document.getElementById('newTranslation').value.trim();
+        const category = document.getElementById('newCategory').value;
+        const pos = document.getElementById('newPos').value;
+        const ex = document.getElementById('newEx').value.trim();
+        if (word && translation) {
+          vocabulary.push({ id: nextVocabId++, category, word, translation, pos, definition: '', example: ex || '' });
+          saveVocabulary();
+          if (activeCategory === category) {
+            renderVocabCards(category);
+          }
+          document.getElementById('wordModal')?.remove();
+          showToast(`✅ "${word}" добавлено!`, "from-green-500 to-emerald-500");
+        } else showToast("Слово и перевод обязательны", "from-red-500 to-orange-500");
+      });
+    }
+
+    // ============================================================
+    // SKILL SECTION RENDERER (Reading, Writing, Speaking, Listening)
+    // Каждая секция имеет категории-паки, как у Vocabulary
+    // ============================================================
+
+    function renderSkillPacks(sectionTitle, icon, lessonsData, sectionType, iconColor) {
+      if (activeSkillCategory) {
+        const cat = lessonsData.find(c => c.id === activeSkillCategory);
+        if (cat) {
+          renderSkillLessonsList(sectionTitle, icon, cat, sectionType, iconColor);
+          return;
+        }
+      }
+
+      // Show category packs
+      let html = `
+        <div class="sticky top-0 bg-dark/80 backdrop-blur-md z-10 py-3 mb-4">
+          <div class="flex items-center gap-3">
+            <i class="fas ${icon} text-3xl ${iconColor}"></i>
+            <div>
+              <h2 class="text-2xl md:text-3xl font-bold text-white">${sectionTitle}</h2>
+              <p class="text-xs text-muted mt-1">${lessonsData.length} категорий • Выбери тему</p>
+            </div>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5" id="skillPacksGrid"></div>`;
+      document.getElementById('mainContent').innerHTML = html;
+
+      const grid = document.getElementById('skillPacksGrid');
+      grid.innerHTML = lessonsData.map((cat, idx) => {
+        const delay = Math.min(idx * 80, 600);
+        return `
+          <div class="pack-card card-animate" style="background:${cat.gradient};animation-delay:${delay}ms" data-cat="${cat.id}">
+            <div class="pack-emoji">${cat.emoji}</div>
+            <div class="pack-name">${escapeHtml(cat.title)}</div>
+            <div class="pack-count">${cat.lessons.length} уроков</div>
+          </div>`;
+      }).join('');
+
+      document.querySelectorAll('.pack-card').forEach(el => {
+        el.addEventListener('click', () => {
+          activeSkillCategory = el.dataset.cat;
+          loadSection(sectionType);
+        });
+      });
+    }
+
+    // Lesson list inside a category
+    function renderSkillLessonsList(sectionTitle, icon, cat, sectionType, iconColor) {
+      let html = `
+        <div class="sticky top-0 bg-dark/80 backdrop-blur-md z-10 py-3 mb-4">
+          <button class="back-btn" id="backToSkillPacks"><i class="fas fa-arrow-left"></i> Назад</button>
+          <div class="flex items-center gap-3 mt-2">
+            <span style="font-size:2rem">${cat.emoji}</span>
+            <div>
+              <h2 class="text-xl md:text-3xl font-bold text-white">${escapeHtml(cat.title)}</h2>
+              <p class="text-xs text-muted mt-0.5">${cat.lessons.length} уроков • Нажми для просмотра</p>
+            </div>
+          </div>
+        </div>
+        <div class="space-y-3 pb-20" id="lessonsList"></div>`;
+      document.getElementById('mainContent').innerHTML = html;
+
+      const list = document.getElementById('lessonsList');
+      list.innerHTML = cat.lessons.map((lesson, idx) => {
+        const delay = Math.min(idx * 60, 500);
+        const accentColor = cat.gradient.match(/#[a-f0-9]+/i)?.[0] || '#8b5cf6';
+        return `
+          <div class="task-item card-animate rounded-xl p-4 border border-white/5 cursor-pointer" style="animation-delay:${delay}ms;border-left:3px solid ${accentColor}" data-lesson-id="${lesson.id}">
+            <div class="flex items-center gap-2">
+              <h3 class="font-bold ${iconColor} text-sm md:text-base flex-1">${cat.emoji} ${escapeHtml(lesson.title)}</h3>
+              ${isLessonDone(sectionType, cat.id, lesson.id) ? '<span class="lesson-done-badge"><i class="fas fa-check"></i> Done</span>' : ''}
+            </div>
+            <p class="text-xs text-muted mt-1">${sectionType === 'writing' ? (lesson.type || '') : sectionType === 'listening' ? (lesson.scenario?.substring(0, 60) + '...') : sectionType === 'speaking' ? (lesson.cueCard?.substring(0, 60) + '...') : ('Текст + вопросы')}</p>
+          </div>`;
+
+      }).join('');
+
+      document.getElementById('backToSkillPacks')?.addEventListener('click', () => {
+        activeSkillCategory = null;
+        loadSection(sectionType);
+      });
+
+      document.querySelectorAll('[data-lesson-id]').forEach(el => {
+        el.addEventListener('click', () => {
+          const lessonId = parseInt(el.dataset.lessonId);
+          const lesson = cat.lessons.find(l => l.id === lessonId);
+          if (lesson) openLessonDetail(lesson, sectionType, cat, icon, iconColor);
+        });
+      });
+    }
+
+    // Lesson Detail — Full View with content
+    function openLessonDetail(lesson, type, cat, icon, iconColor) {
+      let contentHtml = '';
+      let readingScore = { correct: 0, total: 0 };
+
+      if (type === 'reading') {
+        // Fill-in questions section
+        let fillHtml = '';
+        if (lesson.fillQuestions) {
+          const fq = lesson.fillQuestions;
+          fillHtml = `
+          <div class="mt-8 mb-5">
+            <div class="p-4 rounded-xl bg-blue-500/10 border border-blue-500/20 mb-4">
+              <p class="text-sm font-bold text-blue-400 mb-1"><i class="fas fa-pen"></i> ${escapeHtml(fq.title)}</p>
+              <p class="text-xs text-gray-400">${escapeHtml(fq.instruction)}</p>
+            </div>
+            <div class="space-y-3" id="fillQuestionsBlock">
+              ${fq.items.map((item, fi) => `
+                <div class="p-4 rounded-xl bg-white/5 border border-white/5 fill-q-item" data-fi="${fi}">
+                  <p class="text-sm text-gray-200 mb-3">${escapeHtml(item.label)}</p>
+                  <div class="flex gap-2 items-center">
+                    <input type="text" class="fill-input flex-1 bg-black/40 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-400 transition" placeholder="Type your answer..." data-answer="${escapeHtml(item.answer)}" data-fi="${fi}">
+                    <button class="fill-check-btn bg-blue-500/20 hover:bg-blue-500/40 text-blue-400 px-4 py-2 rounded-lg text-sm font-bold transition-all" data-fi="${fi}"><i class="fas fa-check"></i></button>
+                  </div>
+                  <p class="fill-feedback text-xs mt-2 hidden" id="fillFeedback${fi}"></p>
+                </div>
+              `).join('')}
+            </div>
+          </div>`;
+        }
+
+        // Multiple choice (choose TWO) section
+        let mcHtml = '';
+        if (lesson.multipleChoiceQuestions) {
+          const mc = lesson.multipleChoiceQuestions;
+          mcHtml = `
+          <div class="mt-8 mb-5">
+            <div class="p-4 rounded-xl bg-purple-500/10 border border-purple-500/20 mb-4">
+              <p class="text-sm font-bold text-purple-400 mb-1"><i class="fas fa-check-double"></i> Questions 7-8</p>
+              <p class="text-xs text-gray-400">${escapeHtml(mc.instruction)}</p>
+            </div>
+            <div class="space-y-2" id="mcBlock">
+              ${mc.options.map((opt, oi) => `
+                <button class="mc-btn w-full text-left px-4 py-3 rounded-lg bg-white/5 hover:bg-white/10 text-sm text-gray-300 transition-all border border-transparent" data-oi="${oi}">${escapeHtml(opt)}</button>
+              `).join('')}
+            </div>
+            <button class="mt-3 bg-purple-500/20 hover:bg-purple-500/40 text-purple-400 px-5 py-2.5 rounded-lg text-sm font-bold transition-all" id="checkMcBtn"><i class="fas fa-check"></i> Проверить</button>
+            <p class="text-xs mt-2 hidden" id="mcFeedback"></p>
+          </div>`;
+        }
+
+        // TRUE/FALSE/NOT GIVEN section
+        let tfngHtml = '';
+        if (lesson.tfngQuestions) {
+          const tf = lesson.tfngQuestions;
+          tfngHtml = `
+          <div class="mt-8 mb-5">
+            <div class="p-4 rounded-xl bg-orange-500/10 border border-orange-500/20 mb-4">
+              <p class="text-sm font-bold text-orange-400 mb-1"><i class="fas fa-balance-scale"></i> TRUE / FALSE / NOT GIVEN</p>
+              <p class="text-xs text-gray-400">${escapeHtml(tf.instruction)}</p>
+            </div>
+            <div class="space-y-4" id="tfngBlock">
+              ${tf.items.map((item, ti) => `
+                <div class="p-4 rounded-xl bg-white/5 border border-white/5">
+                  <p class="text-sm font-medium text-gray-200 mb-3">${escapeHtml(item.q)}</p>
+                  <div class="space-y-2">
+                    ${item.options.map((opt, oi) => `
+                      <button class="tfng-btn w-full text-left px-4 py-2.5 rounded-lg bg-white/5 hover:bg-white/10 text-sm text-gray-300 transition-all border border-transparent" data-ti="${ti}" data-to="${oi}" data-correct="${item.answer}">${escapeHtml(opt)}</button>
+                    `).join('')}
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>`;
+        }
+
+        contentHtml = `
+          <div class="reading-split-layout">
+            <div class="reading-text-panel" id="readingTextPanel">
+              <div class="highlighter-toolbar" id="hlToolbar">
+                <button class="hl-action-btn" id="hlToggleBtn" title="Включить маркер"><i class="fas fa-highlighter"></i> Маркер</button>
+                <div id="hlColors" style="display:none;align-items:center;gap:0.35rem">
+                  <button class="hl-color-btn active" data-hl-color="hl-yellow" style="background:#facc15" title="Жёлтый"></button>
+                  <button class="hl-color-btn" data-hl-color="hl-green" style="background:#22c55e" title="Зелёный"></button>
+                  <button class="hl-color-btn" data-hl-color="hl-pink" style="background:#ec4899" title="Розовый"></button>
+                  <button class="hl-color-btn" data-hl-color="hl-blue" style="background:#3b82f6" title="Синий"></button>
+                </div>
+                <button class="hl-action-btn" id="hlClearBtn" style="display:none" title="Очистить все"><i class="fas fa-trash-alt"></i> Очистить</button>
+              </div>
+              <p class="text-xs text-muted uppercase tracking-wider mb-3 font-semibold"><i class="fas fa-book-open ${iconColor}"></i> Текст</p>
+              <div class="text-gray-200 text-sm md:text-base leading-relaxed whitespace-pre-line" id="readingTextContent">${escapeHtml(lesson.text)}</div>
+            </div>
+            <div class="reading-questions-panel">
+              <div class="reading-progress" id="readingProgressBar"><div class="reading-progress-fill" id="readingProgressFill"></div></div>
+              <h3 class="text-lg font-bold mb-3 ${iconColor}"><i class="fas fa-question-circle"></i> Вопросы <span id="readingProgressText" class="text-xs text-muted font-mono font-normal ml-2">0/${readingScore.total}</span></h3>
+              <div class="space-y-4" id="questionsBlock">
+                ${(lesson.questions || []).map((q, qi) => `
+                  <div class="p-4 rounded-xl bg-white/5 border border-white/5">
+                    <p class="text-sm font-medium text-gray-200 mb-3">${qi + 1}. ${escapeHtml(q.q)}</p>
+                    <div class="space-y-2">
+                      ${q.options.map((opt, oi) => `
+                        <button class="answer-btn w-full text-left px-4 py-2.5 rounded-lg bg-white/5 hover:bg-white/10 text-sm text-gray-300 transition-all border border-transparent" data-q="${qi}" data-o="${oi}" data-correct="${q.answer}">${String.fromCharCode(65 + oi)}. ${escapeHtml(opt)}</button>
+                      `).join('')}
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+              ${tfngHtml}
+              ${mcHtml}
+              ${fillHtml}
+            </div>
+          </div>`;
+      } else if (type === 'writing') {
+        const isTask1 = (lesson.type || '').toLowerCase().includes('task 1');
+        const timerMins = isTask1 ? 20 : 40;
+        contentHtml = `
+          <div class="p-1 rounded-xl bg-gradient-to-r from-pink-500/20 to-accent/20 mb-4">
+            <div class="bg-dark rounded-xl p-4">
+              <p class="text-xs text-pink-400 font-mono font-bold mb-2">${lesson.type || 'Essay'} • Band ${lesson.bandTarget || '7.0'}</p>
+              <p class="text-gray-200 text-sm md:text-base leading-relaxed">${escapeHtml(lesson.prompt)}</p>
+            </div>
+          </div>
+          <div class="flex items-center justify-between flex-wrap gap-2 mb-3">
+            <h3 class="text-lg font-bold text-pink-400"><i class="fas fa-pen-fancy"></i> Напишите эссе</h3>
+            <div class="flex items-center gap-2">
+              <div class="flex items-center gap-1.5 bg-white/5 px-3 py-1.5 rounded-full">
+                <i class="fas fa-clock text-pink-400 text-xs"></i>
+                <span id="writingTimer" class="text-sm font-mono text-pink-400 font-bold">${String(timerMins).padStart(2, '0')}:00</span>
+              </div>
+              <button id="writingTimerBtn" class="tts-btn bg-pink-500/20 text-pink-400"><i class="fas fa-play"></i> Старт</button>
+            </div>
+          </div>
+          <textarea class="writing-editor" id="writingArea" placeholder="Начните писать здесь..."></textarea>
+          <div class="word-count-bar">
+            <span class="wc-pill bg-white/10 text-gray-400" id="wordCountPill">0 слов</span>
+            <span class="text-xs text-muted" id="wordCountHint">Минимум ${isTask1 ? 150 : 250} слов</span>
+          </div>
+          <details class="mt-4">
+            <summary class="text-sm font-bold text-pink-400 cursor-pointer"><i class="fas fa-sitemap"></i> Шаблон эссе</summary>
+            <div class="essay-template">
+              <h4>📌 Introduction</h4><p>Paraphrase the question. State your opinion/overview.</p>
+              <h4 class="mt-3">📌 Body Paragraph 1</h4><p>Main idea + explanation + example. Use linking words: Furthermore, Moreover, In addition.</p>
+              <h4 class="mt-3">📌 Body Paragraph 2</h4><p>Counter-argument or second main idea. Use: However, On the other hand, In contrast.</p>
+              ${isTask1 ? '' : '<h4 class="mt-3">📌 Body Paragraph 3 (optional)</h4><p>Additional point or rebuttal.</p>'}
+              <h4 class="mt-3">📌 Conclusion</h4><p>Summarize your main points. Restate your opinion. Use: In conclusion, To sum up, Overall.</p>
+            </div>
+          </details>
+          <h3 class="text-lg font-bold mb-3 mt-5 text-pink-400"><i class="fas fa-lightbulb"></i> Советы</h3>
+          <div class="space-y-2">
+            ${(lesson.tips || []).map(tip => `
+              <div class="flex items-start gap-2 text-sm text-gray-300"><i class="fas fa-check-circle text-green-400 mt-0.5 text-xs"></i> ${escapeHtml(tip)}</div>
+            `).join('')}
+          </div>`;
+      } else if (type === 'speaking') {
+        contentHtml = `
+          <div class="mb-5">
+            <h3 class="text-sm font-bold text-green-400 mb-3"><i class="fas fa-comments"></i> Part 1 — Interview</h3>
+            <div class="space-y-2">
+              ${(lesson.part1 || []).map(q => `
+                <div class="p-3 rounded-xl bg-white/5 border border-white/5 text-sm text-gray-200"><i class="fas fa-microphone text-green-400/50 mr-2"></i>${escapeHtml(q)}</div>
+              `).join('')}
+            </div>
+          </div>
+          <div class="mb-5">
+            <h3 class="text-sm font-bold text-green-400 mb-3"><i class="fas fa-id-card"></i> Part 2 — Cue Card</h3>
+            <div class="p-4 rounded-xl bg-green-500/10 border border-green-500/20 text-sm text-gray-200 leading-relaxed">${escapeHtml(lesson.cueCard)}</div>
+            <div class="flex items-center gap-4 mt-4">
+              <div class="cue-timer-ring" id="cueTimerRing">
+                <svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="54" stroke="rgba(255,255,255,0.06)"></circle><circle id="cueTimerCircle" cx="60" cy="60" r="54" stroke="#22c55e" stroke-dasharray="339.29" stroke-dashoffset="0"></circle></svg>
+                <span id="cueTimerText" class="text-xl font-bold font-mono text-green-400">2:00</span>
+              </div>
+              <div class="flex flex-col gap-2">
+                <button id="cueTimerStart" class="tts-btn bg-green-500/20 text-green-400"><i class="fas fa-play"></i> Начать (2 мин)</button>
+                <button id="cueTimerReset" class="tts-btn bg-white/10 text-gray-400"><i class="fas fa-redo"></i> Сброс</button>
+              </div>
+            </div>
+          </div>
+          <div class="mb-5">
+            <h3 class="text-sm font-bold text-green-400 mb-3"><i class="fas fa-microphone-alt"></i> Запись голоса</h3>
+            <div class="flex items-center gap-4">
+              <button class="rec-btn" id="recBtn"><i class="fas fa-microphone text-green-400 text-xl" id="recIcon"></i></button>
+              <div>
+                <p class="text-xs text-muted" id="recStatus">Нажмите для записи</p>
+                <audio id="recAudio" class="mt-2" controls style="display:none;max-width:200px;height:32px"></audio>
+              </div>
+            </div>
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-green-400 mb-3"><i class="fas fa-brain"></i> Part 3 — Discussion</h3>
+            <div class="space-y-2">
+              ${(lesson.part3 || []).map(q => `
+                <div class="p-3 rounded-xl bg-white/5 border border-white/5 text-sm text-gray-200"><i class="fas fa-comment-dots text-green-400/50 mr-2"></i>${escapeHtml(q)}</div>
+              `).join('')}
+            </div>
+          </div>
+          <details class="mt-5">
+            <summary class="text-sm font-bold text-green-400 cursor-pointer"><i class="fas fa-lightbulb"></i> Полезные фразы</summary>
+            <div class="essay-template mt-2">
+              <h4 style="color:#22c55e">Part 1 — Short answers</h4><p>Well, I'd say that... / To be honest... / Actually, I think...</p>
+              <h4 class="mt-3" style="color:#22c55e">Part 2 — Cue Card</h4><p>I'd like to talk about... / What made it special was... / The reason I remember it is...</p>
+              <h4 class="mt-3" style="color:#22c55e">Part 3 — Discussion</h4><p>From my perspective... / It's widely believed that... / There are several factors to consider...</p>
+            </div>
+          </details>`;
+      } else if (type === 'listening') {
+        contentHtml = `
+          <div class="p-4 rounded-xl bg-yellow-500/10 border border-yellow-500/20 mb-5">
+            <p class="text-xs text-yellow-400 font-bold mb-2"><i class="fas fa-headphones"></i> Сценарий</p>
+            <p class="text-sm text-gray-200">${escapeHtml(lesson.scenario)}</p>
+          </div>
+          <div class="p-4 md:p-6 rounded-2xl bg-white/5 border border-white/5 mb-5">
+            <div class="flex items-center justify-between mb-3">
+              <p class="text-xs text-muted uppercase tracking-wider font-semibold"><i class="fas fa-file-alt text-yellow-400"></i> Транскрипт</p>
+              <div class="tts-controls">
+                <button id="ttsPlayBtn" class="tts-btn bg-yellow-500/20 text-yellow-400"><i class="fas fa-volume-up"></i> Слушать</button>
+                <button id="ttsStopBtn" class="tts-btn bg-white/10 text-gray-400" style="display:none"><i class="fas fa-stop"></i> Стоп</button>
+                <div class="flex gap-1" id="ttsSpeedBtns">
+                  <button class="speed-btn" data-speed="0.75">0.75x</button>
+                  <button class="speed-btn active" data-speed="1">1x</button>
+                  <button class="speed-btn" data-speed="1.25">1.25x</button>
+                </div>
+              </div>
+            </div>
+            <div class="text-gray-200 text-sm leading-relaxed whitespace-pre-line" id="listeningTranscript">${escapeHtml(lesson.transcript)}</div>
+          </div>
+          <h3 class="text-lg font-bold mb-3 text-yellow-400"><i class="fas fa-question-circle"></i> Вопросы</h3>
+          <div class="space-y-4" id="questionsBlock">
+            ${(lesson.questions || []).map((q, qi) => `
+              <div class="p-4 rounded-xl bg-white/5 border border-white/5">
+                <p class="text-sm font-medium text-gray-200 mb-3">${qi + 1}. ${escapeHtml(q.q)}</p>
+                <div class="space-y-2">
+                  ${q.options.map((opt, oi) => `
+                    <button class="answer-btn w-full text-left px-4 py-2.5 rounded-lg bg-white/5 hover:bg-white/10 text-sm text-gray-300 transition-all border border-transparent" data-q="${qi}" data-o="${oi}" data-correct="${q.answer}">${String.fromCharCode(65 + oi)}. ${escapeHtml(opt)}</button>
+                  `).join('')}
+                </div>
+              </div>
+            `).join('')}
+          </div>`;
+      }
+
+      // Timer for reading (declared early so template can reference readingScore)
+      let readingTimerInterval = null;
+      let readingStartTime = null;
+
+      const fullHtml = `
+        <div class="sticky top-0 bg-dark/80 backdrop-blur-md z-10 py-3 mb-4">
+          <div class="flex items-center justify-between">
+            <button class="back-btn" id="backToLessons"><i class="fas fa-arrow-left"></i> Назад</button>
+            ${type === 'reading' ? `
+              <div class="flex items-center gap-3">
+                <div class="flex items-center gap-2 bg-white/5 px-3 py-1.5 rounded-full">
+                  <i class="fas fa-clock text-accent text-xs"></i>
+                  <span id="readingTimer" class="text-sm font-mono text-accent font-bold">00:00</span>
+                </div>
+                <button id="finishTestBtn" class="bg-gradient-to-r from-accent to-pink-500 text-white px-4 py-2 rounded-full font-bold text-sm hover:shadow-lg transition-all flex items-center gap-1.5">
+                  <i class="fas fa-flag-checkered"></i> Закончить
+                </button>
+              </div>
+            ` : ''}
+          </div>
+          <div class="flex items-center gap-3 mt-2">
+            <span style="font-size:1.5rem">${cat.emoji}</span>
+            <h2 class="text-lg md:text-2xl font-bold text-white">${escapeHtml(lesson.title)}</h2>
+          </div>
+        </div>
+        <div class="${type === 'reading' ? '' : 'pb-20'}">${contentHtml}</div>
+        <div id="resultsOverlay" class="hidden"></div>`;
+
+      document.getElementById('mainContent').innerHTML = fullHtml;
+      document.getElementById('mainContent').scrollTop = 0;
+
+      // Start timer for reading
+      if (type === 'reading') {
+        readingStartTime = Date.now();
+        // Count total questions
+        readingScore.total = (lesson.questions || []).length
+          + (lesson.tfngQuestions ? lesson.tfngQuestions.items.length : 0)
+          + (lesson.multipleChoiceQuestions ? lesson.multipleChoiceQuestions.answers.length : 0)
+          + (lesson.fillQuestions ? lesson.fillQuestions.items.length : 0);
+
+        readingTimerInterval = setInterval(() => {
+          const elapsed = Math.floor((Date.now() - readingStartTime) / 1000);
+          const mins = String(Math.floor(elapsed / 60)).padStart(2, '0');
+          const secs = String(elapsed % 60).padStart(2, '0');
+          const timerEl = document.getElementById('readingTimer');
+          if (timerEl) timerEl.textContent = `${mins}:${secs}`;
+        }, 1000);
+      }
+
+      document.getElementById('backToLessons')?.addEventListener('click', () => {
+        if (readingTimerInterval) clearInterval(readingTimerInterval);
+        loadSection(type);
+      });
+
+      // Finish test button
+      document.getElementById('finishTestBtn')?.addEventListener('click', () => {
+        if (readingTimerInterval) clearInterval(readingTimerInterval);
+        const elapsed = Math.floor((Date.now() - readingStartTime) / 1000);
+        const mins = Math.floor(elapsed / 60);
+        const secs = elapsed % 60;
+        const timeStr = `${mins} мин ${secs} сек`;
+        const pct = readingScore.total > 0 ? Math.round((readingScore.correct / readingScore.total) * 100) : 0;
+
+        // IELTS band estimation
+        let band, bandColor, emoji, message;
+        if (pct >= 90) { band = '8.0–9.0'; bandColor = '#22c55e'; emoji = '🏆'; message = 'Отличный результат! Вы великолепно справились с тестом.'; }
+        else if (pct >= 75) { band = '7.0–7.5'; bandColor = '#3b82f6'; emoji = '🌟'; message = 'Хороший результат! Вы хорошо понимаете тексты.'; }
+        else if (pct >= 60) { band = '6.0–6.5'; bandColor = '#eab308'; emoji = '👍'; message = 'Неплохо! Есть над чем поработать, но база хорошая.'; }
+        else if (pct >= 45) { band = '5.0–5.5'; bandColor = '#f97316'; emoji = '📚'; message = 'Средний результат. Рекомендуем больше практики чтения.'; }
+        else { band = '4.0–4.5'; bandColor = '#ef4444'; emoji = '💪'; message = 'Нужно больше практики. Попробуйте перечитать текст внимательнее.'; }
+
+        const overlay = document.getElementById('resultsOverlay');
+        overlay.className = 'word-detail-overlay';
+        overlay.innerHTML = `
+          <div class="word-detail-card" style="max-width:480px;text-align:center">
+            <div style="font-size:3.5rem;margin-bottom:0.5rem">${emoji}</div>
+            <h2 style="font-size:1.5rem;font-weight:800;color:white;margin-bottom:0.25rem">Результаты теста</h2>
+            <p style="font-size:0.8rem;color:#737373;margin-bottom:1.5rem">${escapeHtml(lesson.title)}</p>
+
+            <div style="display:flex;gap:0.75rem;justify-content:center;margin-bottom:1.5rem;flex-wrap:wrap">
+              <div style="background:rgba(255,255,255,0.05);border-radius:1rem;padding:1rem 1.25rem;min-width:100px">
+                <p style="font-size:2rem;font-weight:800;color:${bandColor}">${readingScore.correct}/${readingScore.total}</p>
+                <p style="font-size:0.65rem;color:#737373;text-transform:uppercase;letter-spacing:0.05em">Правильных</p>
+              </div>
+              <div style="background:rgba(255,255,255,0.05);border-radius:1rem;padding:1rem 1.25rem;min-width:100px">
+                <p style="font-size:2rem;font-weight:800;color:${bandColor}">${pct}%</p>
+                <p style="font-size:0.65rem;color:#737373;text-transform:uppercase;letter-spacing:0.05em">Точность</p>
+              </div>
+              <div style="background:rgba(255,255,255,0.05);border-radius:1rem;padding:1rem 1.25rem;min-width:100px">
+                <p style="font-size:2rem;font-weight:800;color:#a78bfa">${timeStr}</p>
+                <p style="font-size:0.65rem;color:#737373;text-transform:uppercase;letter-spacing:0.05em">Время</p>
+              </div>
+            </div>
+
+            <div style="background:linear-gradient(135deg,rgba(139,92,246,0.1),rgba(236,72,153,0.1));border:1px solid rgba(139,92,246,0.2);border-radius:1rem;padding:1rem;margin-bottom:1.5rem">
+              <p style="font-size:0.7rem;color:#737373;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.25rem">Примерный балл IELTS</p>
+              <p style="font-size:2.5rem;font-weight:900;background:linear-gradient(135deg,${bandColor},#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent">${band}</p>
+            </div>
+
+            <p style="font-size:0.85rem;color:#d1d5db;line-height:1.5;margin-bottom:1.5rem">${message}</p>
+
+            <div style="display:flex;gap:0.75rem;justify-content:center">
+              <button onclick="document.getElementById('resultsOverlay').classList.add('hidden')" style="background:rgba(255,255,255,0.08);color:white;border:none;padding:0.75rem 1.5rem;border-radius:999px;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.2s">Посмотреть ответы</button>
+              <button onclick="loadSection('reading')" style="background:linear-gradient(135deg,#8b5cf6,#ec4899);color:white;border:none;padding:0.75rem 1.5rem;border-radius:999px;font-size:0.85rem;font-weight:700;cursor:pointer;transition:all 0.2s">Другой тест</button>
+            </div>
+          </div>
+        `;
+        recordTest('reading', readingScore.correct, readingScore.total);
+        markLessonComplete('reading', activeSkillCategory, lesson.id);
+        if (pct >= 75) launchConfetti();
+        checkAndNotifyAchievements();
+      });
+
+      // Answer checking for reading/listening questions
+      document.querySelectorAll('.answer-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const correct = parseInt(btn.dataset.correct);
+          const chosen = parseInt(btn.dataset.o);
+          const qIdx = btn.dataset.q;
+          // Disable all buttons for this question
+          document.querySelectorAll(`.answer-btn[data-q="${qIdx}"]`).forEach(b => {
+            b.disabled = true;
+            b.style.opacity = '0.6';
+            b.style.cursor = 'default';
+            if (parseInt(b.dataset.o) === correct) {
+              b.style.borderColor = '#22c55e';
+              b.style.background = 'rgba(34, 197, 94, 0.15)';
+              b.style.color = '#86efac';
+            }
+          });
+          if (chosen !== correct) {
+            btn.style.borderColor = '#ef4444';
+            btn.style.background = 'rgba(239, 68, 68, 0.15)';
+            btn.style.color = '#fca5a5';
+            if (type === 'reading') readingScore._wrong = (readingScore._wrong || 0) + 1;
+          } else {
+            if (type === 'reading') readingScore.correct++;
+          }
+          if (type === 'reading') window._updateReadingProgress?.();
+        });
+      });
+
+      // Fill-in-the-blank answer checking
+      document.querySelectorAll('.fill-check-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const fi = btn.dataset.fi;
+          const input = document.querySelector(`.fill-input[data-fi="${fi}"]`);
+          const feedback = document.getElementById('fillFeedback' + fi);
+          if (!input || !feedback) return;
+          const userAnswer = input.value.trim().toLowerCase();
+          const correctAnswer = input.dataset.answer.toLowerCase();
+          feedback.classList.remove('hidden');
+          if (userAnswer === correctAnswer) {
+            input.style.borderColor = '#22c55e';
+            input.style.background = 'rgba(34, 197, 94, 0.1)';
+            feedback.textContent = '✅ Correct!';
+            feedback.style.color = '#86efac';
+            input.disabled = true;
+            btn.disabled = true;
+            btn.style.opacity = '0.5';
+            if (type === 'reading') readingScore.correct++;
+            window._updateReadingProgress?.();
+          } else {
+            input.style.borderColor = '#ef4444';
+            input.style.background = 'rgba(239, 68, 68, 0.1)';
+            feedback.textContent = '❌ Wrong. Correct answer: ' + input.dataset.answer;
+            feedback.style.color = '#fca5a5';
+            if (type === 'reading') { readingScore._wrong = (readingScore._wrong || 0) + 1; window._updateReadingProgress?.(); }
+          }
+        });
+      });
+
+      // Allow Enter key to submit fill-in answers
+      document.querySelectorAll('.fill-input').forEach(input => {
+        input.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            const fi = input.dataset.fi;
+            document.querySelector(`.fill-check-btn[data-fi="${fi}"]`)?.click();
+          }
+        });
+      });
+
+      // Multiple choice (choose TWO/THREE) handler
+      const mcSelected = new Set();
+      const mcMaxAnswers = lesson.multipleChoiceQuestions ? lesson.multipleChoiceQuestions.answers.length : 2;
+      document.querySelectorAll('.mc-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const oi = parseInt(btn.dataset.oi);
+          if (mcSelected.has(oi)) {
+            mcSelected.delete(oi);
+            btn.style.borderColor = 'transparent';
+            btn.style.background = 'rgba(255,255,255,0.05)';
+            btn.style.color = '#d1d5db';
+          } else {
+            if (mcSelected.size >= mcMaxAnswers) {
+              showToast(`⚠️ Выберите только ${mcMaxAnswers} варианта`, 'from-yellow-500 to-orange-500');
+              return;
+            }
+            mcSelected.add(oi);
+            btn.style.borderColor = '#a78bfa';
+            btn.style.background = 'rgba(139, 92, 246, 0.15)';
+            btn.style.color = '#c4b5fd';
+          }
+        });
+      });
+
+      document.getElementById('checkMcBtn')?.addEventListener('click', () => {
+        if (!lesson.multipleChoiceQuestions) return;
+        const correctAnswers = lesson.multipleChoiceQuestions.answers;
+        const feedback = document.getElementById('mcFeedback');
+        const isCorrect = mcSelected.size === correctAnswers.length && correctAnswers.every(a => mcSelected.has(a));
+
+        document.querySelectorAll('.mc-btn').forEach(btn => {
+          const oi = parseInt(btn.dataset.oi);
+          btn.disabled = true;
+          btn.style.opacity = '0.7';
+          btn.style.cursor = 'default';
+          if (correctAnswers.includes(oi)) {
+            btn.style.borderColor = '#22c55e';
+            btn.style.background = 'rgba(34, 197, 94, 0.15)';
+            btn.style.color = '#86efac';
+          } else if (mcSelected.has(oi)) {
+            btn.style.borderColor = '#ef4444';
+            btn.style.background = 'rgba(239, 68, 68, 0.15)';
+            btn.style.color = '#fca5a5';
+          }
+        });
+
+        if (feedback) {
+          feedback.classList.remove('hidden');
+          if (isCorrect) {
+            feedback.textContent = '✅ Правильно! Все ответы верны!';
+            feedback.style.color = '#86efac';
+            if (type === 'reading') readingScore.correct += correctAnswers.length;
+          } else {
+            if (type === 'reading') {
+              correctAnswers.forEach(a => { if (mcSelected.has(a)) readingScore.correct++; });
+              readingScore._wrong = (readingScore._wrong || 0) + (correctAnswers.length - [...mcSelected].filter(a => correctAnswers.includes(a)).length);
+            }
+            feedback.textContent = '❌ Неправильно. Правильные ответы выделены зелёным.';
+            feedback.style.color = '#fca5a5';
+          }
+        }
+        document.getElementById('checkMcBtn').disabled = true;
+        document.getElementById('checkMcBtn').style.opacity = '0.5';
+        if (type === 'reading') window._updateReadingProgress?.();
+      });
+
+      // TRUE/FALSE/NOT GIVEN handler
+      document.querySelectorAll('.tfng-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const correct = parseInt(btn.dataset.correct);
+          const chosen = parseInt(btn.dataset.to);
+          const tIdx = btn.dataset.ti;
+          document.querySelectorAll(`.tfng-btn[data-ti="${tIdx}"]`).forEach(b => {
+            b.disabled = true;
+            b.style.opacity = '0.6';
+            b.style.cursor = 'default';
+            if (parseInt(b.dataset.to) === correct) {
+              b.style.borderColor = '#22c55e';
+              b.style.background = 'rgba(34, 197, 94, 0.15)';
+              b.style.color = '#86efac';
+            }
+          });
+          if (chosen !== correct) {
+            btn.style.borderColor = '#ef4444';
+            btn.style.background = 'rgba(239, 68, 68, 0.15)';
+            btn.style.color = '#fca5a5';
+            if (type === 'reading') readingScore._wrong = (readingScore._wrong || 0) + 1;
+          } else {
+            if (type === 'reading') readingScore.correct++;
+          }
+          if (type === 'reading') window._updateReadingProgress?.();
+        });
+      });
+      // Highlighter feature for reading
+      if (type === 'reading') {
+        let hlActive = false;
+        let hlColor = 'hl-yellow';
+        const textPanel = document.getElementById('readingTextPanel');
+        const textContent = document.getElementById('readingTextContent');
+        const hlToggle = document.getElementById('hlToggleBtn');
+        const hlColors = document.getElementById('hlColors');
+        const hlClear = document.getElementById('hlClearBtn');
+
+        // Toggle highlighter mode
+        hlToggle?.addEventListener('click', () => {
+          hlActive = !hlActive;
+          hlToggle.classList.toggle('active', hlActive);
+          hlColors.style.display = hlActive ? 'flex' : 'none';
+          hlClear.style.display = hlActive ? 'inline-flex' : 'none';
+          textPanel?.classList.toggle('hl-mode', hlActive);
+        });
+
+        // Color selection
+        document.querySelectorAll('.hl-color-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            hlColor = btn.dataset.hlColor;
+            document.querySelectorAll('.hl-color-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+          });
+        });
+
+        // Clear all highlights
+        hlClear?.addEventListener('click', () => {
+          if (!textContent) return;
+          const marks = textContent.querySelectorAll('mark');
+          marks.forEach(m => {
+            const textNode = document.createTextNode(m.textContent);
+            m.parentNode.replaceChild(textNode, m);
+          });
+          textContent.normalize();
+        });
+
+        // Apply highlight on text selection
+        textContent?.addEventListener('mouseup', () => {
+          if (!hlActive) return;
+          const selection = window.getSelection();
+          if (!selection || selection.isCollapsed || selection.rangeCount === 0) return;
+
+          const range = selection.getRangeAt(0);
+          // Only highlight within textContent
+          if (!textContent.contains(range.commonAncestorContainer)) return;
+
+          const selectedText = selection.toString().trim();
+          if (!selectedText) return;
+
+          // Check if clicking on existing highlight to remove it
+          const anchorNode = selection.anchorNode;
+          if (anchorNode && anchorNode.parentElement && anchorNode.parentElement.tagName === 'MARK' && selectedText.length < 3) {
+            const mark = anchorNode.parentElement;
+            const textNode = document.createTextNode(mark.textContent);
+            mark.parentNode.replaceChild(textNode, mark);
+            textContent.normalize();
+            selection.removeAllRanges();
+            return;
+          }
+
+          try {
+            const mark = document.createElement('mark');
+            mark.className = hlColor;
+            range.surroundContents(mark);
+
+            // Click to remove highlight
+            mark.addEventListener('click', (e) => {
+              e.stopPropagation();
+              const textNode = document.createTextNode(mark.textContent);
+              mark.parentNode.replaceChild(textNode, mark);
+              textContent.normalize();
+            });
+          } catch (e) {
+            // surroundContents fails on partial selections across nodes
+          }
+          selection.removeAllRanges();
+        });
+
+        // Remove highlight on click
+        textContent?.addEventListener('click', (e) => {
+          if (e.target.tagName === 'MARK') {
+            const textNode = document.createTextNode(e.target.textContent);
+            e.target.parentNode.replaceChild(textNode, e.target);
+            textContent.normalize();
+          }
+        });
+      }
+      // === WRITING features ===
+      if (type === 'writing') {
+        const isTask1w = (lesson.type || '').toLowerCase().includes('task 1');
+        const minWords = isTask1w ? 150 : 250;
+        const timerMinsW = isTask1w ? 20 : 40;
+        let wTimerRunning = false, wTimerInterval = null, wTimeLeft = timerMinsW * 60;
+
+        // Word counter
+        document.getElementById('writingArea')?.addEventListener('input', (e) => {
+          const text = e.target.value.trim();
+          const count = text ? text.split(/\s+/).length : 0;
+          const pill = document.getElementById('wordCountPill');
+          const hint = document.getElementById('wordCountHint');
+          if (pill) {
+            pill.textContent = `${count} слов`;
+            if (count >= minWords) { pill.className = 'wc-pill bg-green-500/20 text-green-400'; }
+            else if (count >= minWords * 0.6) { pill.className = 'wc-pill bg-yellow-500/20 text-yellow-400'; }
+            else { pill.className = 'wc-pill bg-white/10 text-gray-400'; }
+          }
+          if (hint) hint.textContent = count >= minWords ? '✅ Минимум достигнут!' : `Ещё ${minWords - count} слов до минимума`;
+          // Auto-save essay
+          saveEssay(`${type}_${lesson.id}`, e.target.value);
+          if (count >= minWords) {
+            markLessonComplete('writing', activeSkillCategory, lesson.id);
+            checkAndNotifyAchievements();
+          }
+        });
+        // Load saved essay
+        const savedEssay = loadEssays()[`${type}_${lesson.id}`];
+        if (savedEssay?.text) {
+          const ta = document.getElementById('writingArea');
+          if (ta) { ta.value = savedEssay.text; ta.dispatchEvent(new Event('input')); }
+        }
+
+        // Writing timer
+        function updateWTimer() {
+          const m = String(Math.floor(wTimeLeft / 60)).padStart(2, '0');
+          const s = String(wTimeLeft % 60).padStart(2, '0');
+          const el = document.getElementById('writingTimer');
+          if (el) el.textContent = `${m}:${s}`;
+          if (wTimeLeft <= 0) { clearInterval(wTimerInterval); wTimerRunning = false; showToast('⏰ Время вышло!', 'from-red-500 to-orange-500'); }
+        }
+        document.getElementById('writingTimerBtn')?.addEventListener('click', () => {
+          const btn = document.getElementById('writingTimerBtn');
+          if (!wTimerRunning) {
+            wTimerRunning = true;
+            btn.innerHTML = '<i class="fas fa-pause"></i> Пауза';
+            wTimerInterval = setInterval(() => { wTimeLeft--; updateWTimer(); }, 1000);
+          } else {
+            wTimerRunning = false;
+            btn.innerHTML = '<i class="fas fa-play"></i> Продолжить';
+            clearInterval(wTimerInterval);
+          }
+        });
+      }
+
+      // === SPEAKING features ===
+      if (type === 'speaking') {
+        // Cue Card timer (2 min)
+        let cueTimeLeft = 120, cueRunning = false, cueInterval = null;
+        const circumference = 2 * Math.PI * 54;
+        function updateCueTimer() {
+          const m = Math.floor(cueTimeLeft / 60);
+          const s = String(cueTimeLeft % 60).padStart(2, '0');
+          const el = document.getElementById('cueTimerText');
+          const circle = document.getElementById('cueTimerCircle');
+          if (el) el.textContent = `${m}:${s}`;
+          if (circle) {
+            const pct = cueTimeLeft / 120;
+            circle.setAttribute('stroke-dashoffset', String(circumference * (1 - pct)));
+            circle.setAttribute('stroke', cueTimeLeft <= 10 ? '#ef4444' : '#22c55e');
+          }
+          if (cueTimeLeft <= 0) {
+            clearInterval(cueInterval); cueRunning = false;
+            showToast('⏰ 2 минуты прошли!', 'from-red-500 to-orange-500');
+          }
+        }
+        document.getElementById('cueTimerStart')?.addEventListener('click', () => {
+          if (!cueRunning) {
+            cueRunning = true;
+            cueInterval = setInterval(() => { cueTimeLeft--; updateCueTimer(); }, 1000);
+          }
+        });
+        document.getElementById('cueTimerReset')?.addEventListener('click', () => {
+          clearInterval(cueInterval); cueRunning = false; cueTimeLeft = 120; updateCueTimer();
+        });
+
+        // Voice recorder
+        let mediaRecorder = null, audioChunks = [];
+        document.getElementById('recBtn')?.addEventListener('click', async () => {
+          const btn = document.getElementById('recBtn');
+          const icon = document.getElementById('recIcon');
+          const status = document.getElementById('recStatus');
+          const audio = document.getElementById('recAudio');
+          if (!mediaRecorder || mediaRecorder.state === 'inactive') {
+            try {
+              const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+              mediaRecorder = new MediaRecorder(stream);
+              audioChunks = [];
+              mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+              mediaRecorder.onstop = () => {
+                const blob = new Blob(audioChunks, { type: 'audio/webm' });
+                audio.src = URL.createObjectURL(blob);
+                audio.style.display = 'block';
+                stream.getTracks().forEach(t => t.stop());
+              };
+              mediaRecorder.start();
+              btn.classList.add('recording');
+              icon.className = 'fas fa-stop text-red-400 text-xl';
+              status.textContent = '🔴 Запись...';
+            } catch (e) { showToast('❌ Нет доступа к микрофону', 'from-red-500 to-orange-500'); }
+          } else {
+            mediaRecorder.stop();
+            btn.classList.remove('recording');
+            icon.className = 'fas fa-microphone text-green-400 text-xl';
+            status.textContent = 'Запись сохранена ↓';
+          }
+        });
+      }
+
+      // === LISTENING features ===
+      if (type === 'listening') {
+        let ttsRate = 1;
+        document.querySelectorAll('.speed-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            ttsRate = parseFloat(btn.dataset.speed);
+            document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+          });
+        });
+        document.getElementById('ttsPlayBtn')?.addEventListener('click', () => {
+          const text = document.getElementById('listeningTranscript')?.textContent || '';
+          if (!text) return;
+          window.speechSynthesis.cancel();
+          const utt = new SpeechSynthesisUtterance(text);
+          utt.lang = 'en-US'; utt.rate = ttsRate;
+          utt.onend = () => {
+            document.getElementById('ttsPlayBtn').style.display = '';
+            document.getElementById('ttsStopBtn').style.display = 'none';
+          };
+          window.speechSynthesis.speak(utt);
+          document.getElementById('ttsPlayBtn').style.display = 'none';
+          document.getElementById('ttsStopBtn').style.display = '';
+        });
+        document.getElementById('ttsStopBtn')?.addEventListener('click', () => {
+          window.speechSynthesis.cancel();
+          document.getElementById('ttsPlayBtn').style.display = '';
+          document.getElementById('ttsStopBtn').style.display = 'none';
+        });
+      }
+
+      // === READING progress bar update ===
+      if (type === 'reading') {
+        window._updateReadingProgress = () => {
+          const answered = readingScore.correct + (readingScore._wrong || 0);
+          const pct = readingScore.total > 0 ? Math.round((answered / readingScore.total) * 100) : 0;
+          const fill = document.getElementById('readingProgressFill');
+          const txt = document.getElementById('readingProgressText');
+          if (fill) fill.style.width = pct + '%';
+          if (txt) txt.textContent = `${answered}/${readingScore.total}`;
+        };
+        readingScore._wrong = 0;
+      }
+
+      // === Dictionary popup ===
+      if (type === 'reading') {
+        document.getElementById('readingTextContent')?.addEventListener('dblclick', async (e) => {
+          const sel = window.getSelection();
+          const word = sel?.toString().trim();
+          if (!word || word.includes(' ')) return;
+          document.querySelectorAll('.dict-popup').forEach(p => p.remove());
+          const popup = document.createElement('div');
+          popup.className = 'dict-popup';
+          popup.innerHTML = `<p class="text-sm font-bold text-accent mb-1">${escapeHtml(word)}</p><p class="text-xs text-muted">Загрузка...</p>`;
+          popup.style.left = e.clientX + 'px';
+          popup.style.top = (e.clientY + 15) + 'px';
+          document.body.appendChild(popup);
+          try {
+            const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(word)}`);
+            if (!res.ok) throw new Error();
+            const data = await res.json();
+            const entry = data[0];
+            const meaning = entry.meanings[0];
+            const def = meaning?.definitions[0]?.definition || 'No definition';
+            const pos = meaning?.partOfSpeech || '';
+            const phonetic = entry.phonetic || '';
+            popup.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:start"><div><p class="text-sm font-bold text-accent">${escapeHtml(word)}</p><p class="text-xs text-muted">${phonetic} • ${pos}</p></div><button onclick="this.closest('.dict-popup').remove()" style="color:#737373;background:none;border:none;cursor:pointer;font-size:1rem">&times;</button></div><p class="text-xs text-gray-300 mt-2 leading-relaxed">${escapeHtml(def)}</p>`;
+          } catch {
+            popup.innerHTML = `<div style="display:flex;justify-content:space-between"><p class="text-sm text-gray-400">Слово не найдено</p><button onclick="this.closest('.dict-popup').remove()" style="color:#737373;background:none;border:none;cursor:pointer">&times;</button></div>`;
+          }
+          setTimeout(() => { document.addEventListener('click', function rm(ev) { if (!popup.contains(ev.target)) { popup.remove(); document.removeEventListener('click', rm); } }); }, 100);
+        });
+      }
+    }
+
+    // === MULTI-USER SYSTEM ===
+    let currentUser = localStorage.getItem('ielts_current_user') || '';
+
+    function getStorageKey(baseKey) {
+      return currentUser ? `${baseKey}_${currentUser}` : baseKey;
+    }
+
+    // === PROFILE / localStorage ===
+    const PROFILE_KEY_BASE = 'ielts_profile';
+    function loadProfile() {
+      try { return JSON.parse(localStorage.getItem(getStorageKey(PROFILE_KEY_BASE))) || {}; } catch { return {}; }
+    }
+    function saveProfile(data) {
+      localStorage.setItem(getStorageKey(PROFILE_KEY_BASE), JSON.stringify(data));
+    }
+    function updateStreak() {
+      const p = loadProfile();
+      const today = new Date().toISOString().split('T')[0];
+      if (p.lastDay === today) return;
+      const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+      if (p.lastDay === yesterday) { p.streak = (p.streak || 0) + 1; }
+      else { p.streak = 1; }
+      p.lastDay = today;
+      p.totalDays = (p.totalDays || 0) + 1;
+      saveProfile(p);
+    }
+    function recordTest(section, score, total) {
+      const p = loadProfile();
+      if (!p.tests) p.tests = [];
+      p.tests.push({ section, score, total, date: new Date().toISOString() });
+      p.testsCompleted = (p.testsCompleted || 0) + 1;
+      saveProfile(p);
+    }
+
+    // === localStorage Persistence ===
+    const VOCAB_KEY_BASE = 'ielts_vocab';
+    const COMPLETED_KEY_BASE = 'ielts_completed';
+    const ESSAYS_KEY_BASE = 'ielts_essays';
+    const ACH_SEEN_KEY_BASE = 'ielts_ach_seen';
+
+    function saveVocabulary() { localStorage.setItem(getStorageKey(VOCAB_KEY_BASE), JSON.stringify(vocabulary)); }
+    function loadSavedVocabulary() {
+      try {
+        const s = JSON.parse(localStorage.getItem(getStorageKey(VOCAB_KEY_BASE)));
+        if (s && s.length > 0) {
+          vocabulary = s;
+          nextVocabId = Math.max(...vocabulary.map(v => v.id)) + 1;
+        } else {
+          vocabulary = JSON.parse(JSON.stringify(INITIAL_VOCABULARY));
+          nextVocabId = 38;
+        }
+      } catch {
+        vocabulary = JSON.parse(JSON.stringify(INITIAL_VOCABULARY));
+        nextVocabId = 38;
+      }
+    }
+    function markLessonComplete(type, catId, lessonId) {
+      const c = loadCompleted();
+      const k = `${type}_${catId}_${lessonId}`;
+      if (!c.includes(k)) { c.push(k); localStorage.setItem(getStorageKey(COMPLETED_KEY_BASE), JSON.stringify(c)); }
+    }
+    function loadCompleted() { try { return JSON.parse(localStorage.getItem(getStorageKey(COMPLETED_KEY_BASE))) || []; } catch { return []; } }
+    function isLessonDone(type, catId, lessonId) { return loadCompleted().includes(`${type}_${catId}_${lessonId}`); }
+    function saveEssay(id, text) { const e = loadEssays(); e[id] = { text, date: new Date().toISOString() }; localStorage.setItem(getStorageKey(ESSAYS_KEY_BASE), JSON.stringify(e)); }
+    function loadEssays() { try { return JSON.parse(localStorage.getItem(getStorageKey(ESSAYS_KEY_BASE))) || {}; } catch { return {}; } }
+
+    // === Achievements ===
+    const achievementsDefs = [
+      { id: 'first_flame', emoji: '🔥', title: 'First Flame', desc: 'Первый день в приложении', check: p => (p.totalDays || 0) >= 1 },
+      { id: 'bookworm', emoji: '📚', title: 'Bookworm', desc: 'Пройти 5 тестов', check: p => (p.testsCompleted || 0) >= 5 },
+      { id: 'sharpshooter', emoji: '🎯', title: 'Sharpshooter', desc: '100% на тесте', check: p => (p.tests || []).some(t => t.score === t.total && t.total > 0) },
+      { id: 'week_warrior', emoji: '🗓', title: 'Week Warrior', desc: '7 дней подряд', check: p => (p.streak || 0) >= 7 },
+      { id: 'vocab_master', emoji: '💎', title: 'Vocab Master', desc: '50+ слов', check: () => vocabulary.length >= 50 },
+      { id: 'quiz_lover', emoji: '⚡', title: 'Quiz Lover', desc: 'Пройти 10 квизов', check: p => (p.testsCompleted || 0) >= 10 },
+      { id: 'polyglot', emoji: '🌍', title: 'Polyglot', desc: 'Слова в 5+ категориях', check: () => new Set(vocabulary.map(v => v.category)).size >= 5 },
+      { id: 'writer', emoji: '✍️', title: 'Writer', desc: 'Написать 3 эссе', check: () => Object.keys(loadEssays()).length >= 3 },
+    ];
+    function getUnlockedAch() { const p = loadProfile(); return achievementsDefs.filter(a => a.check(p)); }
+    function checkAndNotifyAchievements() {
+      const unlocked = getUnlockedAch();
+      const seen = JSON.parse(localStorage.getItem(getStorageKey(ACH_SEEN_KEY_BASE)) || '[]');
+      const fresh = unlocked.filter(a => !seen.includes(a.id));
+      if (fresh.length > 0) {
+        fresh.forEach(a => showToast(`${a.emoji} ${a.title}!`, 'from-yellow-400 to-orange-500'));
+        localStorage.setItem(getStorageKey(ACH_SEEN_KEY_BASE), JSON.stringify(unlocked.map(a => a.id)));
+      }
+    }
+
+    // === Confetti ===
+    function launchConfetti() {
+      const cols = ['#8b5cf6', '#ec4899', '#22c55e', '#3b82f6', '#eab308', '#ef4444'];
+      for (let i = 0; i < 50; i++) {
+        const el = document.createElement('div');
+        el.className = 'confetti-piece';
+        el.style.left = Math.random() * 100 + 'vw';
+        el.style.width = (Math.random() * 8 + 4) + 'px';
+        el.style.height = (Math.random() * 8 + 4) + 'px';
+        el.style.background = cols[Math.floor(Math.random() * cols.length)];
+        el.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+        el.style.animationDuration = (Math.random() * 2 + 1.5) + 's';
+        el.style.animationDelay = (Math.random() * 0.8) + 's';
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 4000);
+      }
+    }
+
+    // === Dashboard ===
+    function renderDashboard() {
+      const p = loadProfile();
+      const streak = p.streak || 0, totalDays = p.totalDays || 0, tc = p.testsCompleted || 0;
+      const tests = p.tests || [];
+      const recent = tests.slice(-5).reverse();
+      const avg = tests.length > 0 ? Math.round(tests.reduce((s, t) => s + (t.total > 0 ? t.score / t.total * 100 : 0), 0) / tests.length) : 0;
+      const unlocked = getUnlockedAch();
+      const completed = loadCompleted();
+      const html = `
+      <div class="page-transition">
+        <div class="sticky top-0 bg-dark/80 backdrop-blur-md z-10 py-3 mb-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 id="dashGreeting" class="text-2xl md:text-4xl font-bold bg-gradient-to-r from-white via-purple-200 to-accent bg-clip-text text-transparent">Dashboard</h2>
+              <p id="dashLiveTime" class="text-xs text-muted mt-1 capitalize font-mono">Ваш прогресс IELTS</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button id="globalSearchBtn" class="bg-white/5 hover:bg-white/10 border border-white/10 text-muted hover:text-white px-3 md:px-4 py-2 md:py-2.5 rounded-xl transition-all flex items-center gap-2 text-xs md:text-sm"><i class="fas fa-search"></i><span class="hidden md:inline"> Поиск</span></button>
+              <button id="logoutBtn" class="bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 text-red-400 px-3 md:px-4 py-2 md:py-2.5 rounded-xl transition-all flex items-center gap-2 text-xs md:text-sm"><i class="fas fa-sign-out-alt"></i><span class="hidden md:inline"> Сменить</span></button>
+            </div>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+          <div class="dash-stat-card card-animate" style="animation-delay:0ms"><div class="streak-fire">${streak > 0 ? '🔥' : '❄️'}</div><p class="text-2xl font-extrabold text-white mt-1">${streak}</p><p class="text-xs text-muted">Дней подряд</p></div>
+          <div class="dash-stat-card card-animate" style="animation-delay:80ms"><div style="font-size:2rem">📚</div><p class="text-2xl font-extrabold text-white mt-1">${vocabulary.length}</p><p class="text-xs text-muted">Слов</p></div>
+          <div class="dash-stat-card card-animate" style="animation-delay:160ms"><div style="font-size:2rem">✅</div><p class="text-2xl font-extrabold text-white mt-1">${tc}</p><p class="text-xs text-muted">Тестов</p></div>
+          <div class="dash-stat-card card-animate" style="animation-delay:240ms"><div style="font-size:2rem">📊</div><p class="text-2xl font-extrabold text-white mt-1">${avg}%</p><p class="text-xs text-muted">Средний балл</p></div>
+        </div>
+        <h3 class="text-lg font-bold text-white mb-3"><i class="fas fa-bolt text-yellow-400"></i> Быстрый доступ</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+          <div class="dash-quick-card card-animate" style="animation-delay:100ms;background:linear-gradient(135deg,rgba(139,92,246,0.15),rgba(139,92,246,0.05))" data-goto="vocabulary"><i class="fas fa-brain text-2xl text-accent"></i><div><p class="font-bold text-white text-sm">Vocabulary</p><p class="text-xs text-muted">${vocabulary.length} слов</p></div></div>
+          <div class="dash-quick-card card-animate" style="animation-delay:180ms;background:linear-gradient(135deg,rgba(96,165,250,0.15),rgba(96,165,250,0.05))" data-goto="reading"><i class="fas fa-book-open text-2xl text-blue-400"></i><div><p class="font-bold text-white text-sm">Reading</p><p class="text-xs text-muted">${readingLessons.reduce((s, c) => s + c.lessons.length, 0)} уроков</p></div></div>
+          <div class="dash-quick-card card-animate" style="animation-delay:260ms;background:linear-gradient(135deg,rgba(244,114,182,0.15),rgba(244,114,182,0.05))" data-goto="writing"><i class="fas fa-pen-fancy text-2xl text-pink-400"></i><div><p class="font-bold text-white text-sm">Writing</p><p class="text-xs text-muted">${writingLessons.reduce((s, c) => s + c.lessons.length, 0)} уроков</p></div></div>
+          <div class="dash-quick-card card-animate" style="animation-delay:340ms;background:linear-gradient(135deg,rgba(34,197,94,0.15),rgba(34,197,94,0.05))" data-goto="speaking"><i class="fas fa-microphone-alt text-2xl text-green-400"></i><div><p class="font-bold text-white text-sm">Speaking</p><p class="text-xs text-muted">${speakingLessons.reduce((s, c) => s + c.lessons.length, 0)} уроков</p></div></div>
+        </div>
+        <h3 class="text-lg font-bold text-white mb-3"><i class="fas fa-trophy text-yellow-400"></i> Достижения <span class="text-xs text-muted font-mono font-normal ml-1">${unlocked.length}/${achievementsDefs.length}</span></h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+          ${achievementsDefs.map((a, i) => { const u = unlocked.some(x => x.id === a.id); return `<div class="achievement-badge ${u ? 'unlocked' : 'locked'} card-animate" style="animation-delay:${i * 60}ms"><span style="font-size:1.75rem">${a.emoji}</span><div><p class="font-bold text-sm ${u ? 'text-white' : 'text-gray-500'}">${a.title}</p><p class="text-xs ${u ? 'text-gray-400' : 'text-gray-600'}">${a.desc}</p></div>${u ? '<i class="fas fa-check-circle text-green-400 ml-auto"></i>' : '<i class="fas fa-lock text-gray-600 ml-auto"></i>'}</div>`; }).join('')}
+        </div>
+        ${recent.length > 0 ? `<h3 class="text-lg font-bold text-white mb-3"><i class="fas fa-history text-accent"></i> Недавние тесты</h3><div class="space-y-2 mb-6 pb-20">${recent.map(t => { const pct = t.total > 0 ? Math.round(t.score / t.total * 100) : 0; const c = pct >= 80 ? '#22c55e' : pct >= 60 ? '#eab308' : '#ef4444'; const em = t.section === 'reading' ? '📖' : t.section === 'writing' ? '✍️' : t.section === 'speaking' ? '🎤' : '🎧'; const d = new Date(t.date).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' }); return `<div class="flex items-center gap-3 p-3 rounded-xl bg-white/3 border border-white/5"><span style="font-size:1.25rem">${em}</span><div class="flex-1"><p class="text-sm font-medium text-white capitalize">${t.section}</p><p class="text-xs text-muted">${d}</p></div><div class="text-right"><p class="font-bold font-mono" style="color:${c}">${t.score}/${t.total}</p><p class="text-xs text-muted">${pct}%</p></div></div>`; }).join('')}</div>` : '<div class="text-center py-8 text-muted pb-20"><i class="fas fa-chart-line text-3xl mb-2 block"></i><p>Пройдите первый тест!</p></div>'}
+      </div>`;
+      document.getElementById('mainContent').innerHTML = html;
+      document.querySelectorAll('[data-goto]').forEach(el => el.addEventListener('click', () => { activeSkillCategory = null; loadSection(el.dataset.goto); }));
+      document.getElementById('globalSearchBtn')?.addEventListener('click', openGlobalSearch);
+      document.getElementById('logoutBtn')?.addEventListener('click', logoutUser);
+      updateRealTimeClock();
+    }
+
+    // === Global Search ===
+    function openGlobalSearch() {
+      const h = `<div class="search-overlay" id="searchOverlay"><div style="position:relative;width:100%;max-width:500px"><i class="fas fa-search" style="position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:#737373"></i><input type="text" id="gsInput" class="search-global-input" placeholder="Искать слова, уроки..." autofocus></div><div class="search-results" id="gsResults"></div><button id="gsClose" style="position:fixed;top:1rem;right:1rem;background:rgba(255,255,255,0.08);border:none;color:#999;width:40px;height:40px;border-radius:50%;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center"><i class="fas fa-times"></i></button></div>`;
+      document.body.insertAdjacentHTML('beforeend', h);
+      document.getElementById('gsClose')?.addEventListener('click', () => document.getElementById('searchOverlay')?.remove());
+      document.getElementById('searchOverlay')?.addEventListener('click', e => { if (e.target.id === 'searchOverlay') document.getElementById('searchOverlay')?.remove(); });
+      const esc = e => { if (e.key === 'Escape') { document.getElementById('searchOverlay')?.remove(); document.removeEventListener('keydown', esc); } };
+      document.addEventListener('keydown', esc);
+      document.getElementById('gsInput')?.addEventListener('input', e => {
+        const q = e.target.value.toLowerCase().trim();
+        const r = document.getElementById('gsResults');
+        if (!q || q.length < 2) { r.innerHTML = '<p class="text-center text-muted text-sm py-8">Введите минимум 2 символа</p>'; return; }
+        let items = [];
+        vocabulary.filter(v => v.word.toLowerCase().includes(q) || v.translation.toLowerCase().includes(q)).slice(0, 6).forEach(v => items.push({ icon: 'fa-brain', color: 'text-accent', t: v.word, s: v.translation, fn: () => { document.getElementById('searchOverlay')?.remove(); activeCategory = v.category; loadSection('vocabulary'); } }));
+        readingLessons.forEach(c => c.lessons.filter(l => l.title.toLowerCase().includes(q)).forEach(l => items.push({ icon: 'fa-book-open', color: 'text-blue-400', t: l.title, s: 'Reading • ' + c.title, fn: () => { document.getElementById('searchOverlay')?.remove(); activeSkillCategory = c.id; loadSection('reading'); } })));
+        writingLessons.forEach(c => c.lessons.filter(l => l.title.toLowerCase().includes(q)).forEach(l => items.push({ icon: 'fa-pen-fancy', color: 'text-pink-400', t: l.title, s: 'Writing • ' + c.title, fn: () => { document.getElementById('searchOverlay')?.remove(); activeSkillCategory = c.id; loadSection('writing'); } })));
+        speakingLessons.forEach(c => c.lessons.filter(l => l.title.toLowerCase().includes(q)).forEach(l => items.push({ icon: 'fa-microphone-alt', color: 'text-green-400', t: l.title, s: 'Speaking • ' + c.title, fn: () => { document.getElementById('searchOverlay')?.remove(); activeSkillCategory = c.id; loadSection('speaking'); } })));
+        listeningLessons.forEach(c => c.lessons.filter(l => l.title.toLowerCase().includes(q)).forEach(l => items.push({ icon: 'fa-headphones', color: 'text-yellow-400', t: l.title, s: 'Listening • ' + c.title, fn: () => { document.getElementById('searchOverlay')?.remove(); activeSkillCategory = c.id; loadSection('listening'); } })));
+        if (!items.length) { r.innerHTML = '<p class="text-center text-muted text-sm py-8"><i class="fas fa-search mb-2 text-2xl block"></i>Ничего не найдено</p>'; return; }
+        r.innerHTML = items.map((it, i) => `<div class="search-result-item" data-si="${i}"><i class="fas ${it.icon} ${it.color}"></i><div><p class="text-sm font-medium">${escapeHtml(it.t)}</p><p class="text-xs text-muted">${escapeHtml(it.s)}</p></div></div>`).join('');
+        document.querySelectorAll('.search-result-item').forEach(el => el.addEventListener('click', () => items[parseInt(el.dataset.si)]?.fn()));
+      });
+    }
+
+    // === Matching Game ===
+    function startMatchingGame(catId) {
+      const cw = vocabulary.filter(v => v.category === (catId || activeCategory));
+      if (cw.length < 4) { showToast('Нужно минимум 4 слова!', 'from-red-500 to-orange-500'); return; }
+      const gw = [...cw].sort(() => Math.random() - 0.5).slice(0, Math.min(6, cw.length));
+      const L = [...gw].sort(() => Math.random() - 0.5), R = [...gw].sort(() => Math.random() - 0.5);
+      let sel = null, score = 0; const st = Date.now();
+      const h = `<div class="word-detail-overlay" id="matchOverlay"><div class="word-detail-card" style="max-width:520px;padding:1.5rem"><button class="word-detail-close" id="closeMatch"><i class="fas fa-times"></i></button><h3 class="text-xl font-bold text-white mb-1"><i class="fas fa-puzzle-piece text-accent"></i> Matching Game</h3><p class="text-xs text-muted mb-4">Соедини слово с переводом</p><div class="flex items-center justify-between mb-4"><span class="wc-pill bg-accent/20 text-accent" id="mScore">0/${gw.length}</span><span class="wc-pill bg-white/10 text-gray-400" id="mTimer">0:00</span></div><div class="match-columns" id="mGrid"><div class="match-col">${L.map((w, i) => `<div class="match-card" data-s="l" data-i="${i}" data-wid="${w.id}">${escapeHtml(w.word)}</div>`).join('')}</div><div class="match-col">${R.map((w, i) => `<div class="match-card" data-s="r" data-i="${i}" data-wid="${w.id}">${escapeHtml(w.translation)}</div>`).join('')}</div></div></div></div>`;
+      document.body.insertAdjacentHTML('beforeend', h);
+      const ti = setInterval(() => { const e = Math.floor((Date.now() - st) / 1000); const el = document.getElementById('mTimer'); if (el) el.textContent = `${Math.floor(e / 60)}:${String(e % 60).padStart(2, '0')}`; }, 1000);
+      document.getElementById('closeMatch')?.addEventListener('click', () => { clearInterval(ti); document.getElementById('matchOverlay')?.remove(); });
+      document.querySelectorAll('#mGrid .match-card').forEach(card => {
+        card.addEventListener('click', () => {
+          if (card.classList.contains('correct')) return;
+          const side = card.dataset.s, wid = parseInt(card.dataset.wid);
+          if (!sel) { sel = { side, wid, el: card }; card.classList.add('selected'); }
+          else if (sel.side === side) { sel.el.classList.remove('selected'); sel = { side, wid, el: card }; card.classList.add('selected'); }
+          else {
+            if (sel.wid === wid) { card.classList.remove('selected'); card.classList.add('correct'); sel.el.classList.remove('selected'); sel.el.classList.add('correct'); score++; document.getElementById('mScore').textContent = `${score}/${gw.length}`; if (score === gw.length) { clearInterval(ti); const el = Math.floor((Date.now() - st) / 1000); setTimeout(() => { launchConfetti(); showToast(`🎉 Все пары за ${el} сек!`, 'from-green-500 to-emerald-500'); setTimeout(() => document.getElementById('matchOverlay')?.remove(), 1500); }, 400); } sel = null; }
+            else { card.classList.add('wrong'); sel.el.classList.add('wrong'); const pr = sel.el; setTimeout(() => { card.classList.remove('wrong', 'selected'); pr.classList.remove('wrong', 'selected'); }, 500); sel = null; }
+          }
+        });
+      });
+    }
+
+    // Real time clock
+    function updateRealTimeClock() {
+      const p = document.getElementById('dashLiveTime');
+      const h2 = document.getElementById('dashGreeting');
+      if (!p || !h2) return;
+      const now = new Date();
+      const h = now.getHours();
+      let greeting = 'Добрый вечер';
+      let emoji = '🌆';
+      if (h < 6) { greeting = 'Доброй ночи'; emoji = '🌙'; }
+      else if (h < 12) { greeting = 'Доброе утро'; emoji = '☀️'; }
+      else if (h < 18) { greeting = 'Добрый день'; emoji = '👋'; }
+
+      const timeStr = now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      const dateStr = now.toLocaleDateString('ru-RU', { weekday: 'short', day: 'numeric', month: 'long' });
+      p.innerHTML = `<i class="far fa-clock text-accent/80"></i> <strong class="text-gray-200">${timeStr}</strong> <span class="text-gray-500 mx-1">•</span> <span class="capitalize text-gray-400">${dateStr}</span>`;
+      if (!h2.dataset.greeted || h2.dataset.greeted !== greeting) {
+        h2.innerHTML = `${greeting} <span class="text-accent">${emoji}</span>`;
+        h2.dataset.greeted = greeting;
+      }
+    }
+
+    // Navigation
+    function setActiveNav(section) {
+      document.querySelectorAll('.nav-btn, .bottom-nav-item').forEach(btn => {
+        btn.classList.remove('nav-active', 'active');
+        if (btn.dataset?.section === section) {
+          btn.classList.add('nav-active');
+          btn.classList.add('active');
+        }
+      });
+    }
+
+    function loadSection(section) {
+      activeSection = section;
+      setActiveNav(section);
+      window.speechSynthesis?.cancel();
+      if (section === 'dashboard') renderDashboard();
+      else if (section === 'vocabulary') { activeSkillCategory = null; renderVocabularySection(); }
+      else if (section === 'reading') renderSkillPacks('Reading Lab', 'fa-book-open', readingLessons, 'reading', 'text-blue-400');
+      else if (section === 'writing') renderSkillPacks('Writing Flow', 'fa-pen-fancy', writingLessons, 'writing', 'text-pink-400');
+      else if (section === 'speaking') renderSkillPacks('Speaking Studio', 'fa-microphone-alt', speakingLessons, 'speaking', 'text-green-400');
+      else if (section === 'listening') renderSkillPacks('Listening Lab', 'fa-headphones', listeningLessons, 'listening', 'text-yellow-400');
+      document.getElementById('mainContent')?.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Logic for Login
+    function initLogin() {
+      const overlay = document.getElementById('loginOverlay');
+      const input = document.getElementById('usernameInput');
+      const btn = document.getElementById('loginBtn');
+
+      if (currentUser) {
+        overlay.style.display = 'none';
+        postLoginInit();
+      } else {
+        overlay.style.display = 'flex';
+        setTimeout(() => input.focus(), 100);
+      }
+
+      const doLogin = () => {
+        const val = input.value.trim();
+        if (val) {
+          currentUser = val;
+          localStorage.setItem('ielts_current_user', currentUser);
+          overlay.style.opacity = '0';
+          setTimeout(() => {
+            overlay.style.display = 'none';
+            postLoginInit();
+            showToast(`👋 Добро пожаловать, ${currentUser}!`, 'from-accent to-pink-500');
+          }, 300);
+        } else {
+          showToast('Пожалуйста, введите имя', 'from-red-500 to-orange-500');
+        }
+      };
+
+      btn.addEventListener('click', doLogin);
+      input.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+    }
+
+    function logoutUser() {
+      localStorage.removeItem('ielts_current_user');
+      location.reload();
+    }
+
+    // Post Login Initialize
+    function postLoginInit() {
+      loadSavedVocabulary();
+      updateStreak();
+      updateRealTimeClock();
+      setInterval(updateRealTimeClock, 1000);
+
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js').catch(() => { });
+      }
+      loadSection('dashboard');
+      setTimeout(checkAndNotifyAchievements, 1500);
+
+      document.querySelectorAll('.nav-btn, .bottom-nav-item').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const section = btn.dataset.section;
+          if (section) {
+            activeSkillCategory = null;
+            loadSection(section);
+          }
+        });
+      });
+
+      document.getElementById('fabButton')?.addEventListener('click', () => {
+        if (activeSection === 'vocabulary') openAddModal();
+        else showToast('Перейди в Vocabulary для добавления', 'from-accent to-pink-500');
+      });
+    }
+
+    function init() {
+      initLogin();
+    }
+
+    window.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+
+</html>
